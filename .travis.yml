@@ -1,0 +1,22 @@
+language: android
+os: linux
+dist: trusty
+android:
+  components:
+    - build-tools-29.0.3
+    - android-29
+    - tools
+before_install:
+  - cd $TRAVIS_BUILD_DIR/
+  - chmod +x gradlew
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+script:
+  - cd $TRAVIS_BUILD_DIR/
+  - chmod +x gradlew
+  - "./gradlew testDebugUnitTest assembleDebug"A
