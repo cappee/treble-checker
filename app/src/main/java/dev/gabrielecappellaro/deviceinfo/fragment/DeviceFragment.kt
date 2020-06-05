@@ -33,18 +33,21 @@ class DeviceFragment : Fragment() {
         val textViewRefreshRate: MaterialTextView = view.findViewById(R.id.textview_refresh_rate)
 
         //Setting helper values on textviews
-        textViewBrandModelCodename.text = DeviceHelper.identification()
-        textViewBattery.text = DeviceHelper.batteryCapacityExperimental(requireContext())
-        textViewProcessor.text = DeviceHelper.cpu()
+        Thread {
+            textViewBrandModelCodename.text = DeviceHelper.identification()
+            textViewBattery.text = DeviceHelper.batteryCapacityExperimental(requireContext())
+            textViewProcessor.text = DeviceHelper.cpu()
+            textViewArchitecture.text = DeviceHelper.cpuArch()
+            textViewRAM.text = DeviceHelper.totalRam(requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
+            textViewInternalMemory.text = DeviceHelper.internalStorage(requireContext())
+            textViewExternalMemory.text = DeviceHelper.externalStorage(requireContext())
+            textViewDisplayDimension.text = DeviceHelper.displaySize(requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+            textViewDisplayResolution.text = DeviceHelper.displayResolution(requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+            textViewDisplayDPI.text = DeviceHelper.displayDPI(requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+            textViewRefreshRate.text = DeviceHelper.displayRefreshRate(requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+        }.run()
         textViewVideoCard.text = arguments?.getString("GPU_INFO")
-        textViewArchitecture.text = DeviceHelper.cpuArch()
-        textViewRAM.text = DeviceHelper.totalRam(requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
-        textViewInternalMemory.text = DeviceHelper.internalStorage(requireContext())
-        textViewExternalMemory.text = DeviceHelper.externalStorage(requireContext())
-        textViewDisplayDimension.text = DeviceHelper.displaySize(requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-        textViewDisplayResolution.text = DeviceHelper.displayResolution(requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-        textViewDisplayDPI.text = DeviceHelper.displayDPI(requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-        textViewRefreshRate.text = DeviceHelper.displayRefreshRate(requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+
         return view
     }
 
