@@ -1,0 +1,19 @@
+<resources>
+
+    <style name="MaterialComponents.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="md_font_title">@font/product_sans_medium</item>
+        <item name="md_corner_radius">10dp</item>
+    </style>
+
+    <style name="MaterialComponents.Dark" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="md_font_title">@font/product_sans_medium</item>
+        <item name="md_corner_radius">10dp</item>
+    </style>
+
+</resources>
