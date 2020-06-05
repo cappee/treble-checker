@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name" translatable="false">Treble Checker</string>
+    <string name="treble" translatable="false">Treble</string>
+    <string name="checker" translatable="false">Checker</string>
+    <string name="project_treble" translatable="false">Project Treble</string>
+    <string name="status">Stato</string>
+    <string name="compatible">Compatibile</string>
+    <string name="not_compatible">Non compatibile</string>
+    <string name="vndk_version">Versione VNDK</string>
+    <string name="more_info">Scopri di più</string>
+    <string name="a_b_partitioning">Partizionamento A/B</string>
+    <string name="supported">Supportato</string>
+    <string name="not_supported">Non supportato</string>
+    <string name="seamless_updates">Aggiornamenti silenziosi</string>
+    <string name="lite" translatable="false">lite</string>
+    <string name="legacy" translatable="false">Legacy</string>
+    <string name="treble_arch">Architettura di Treble</string>
+    <string name="latest_typology">Ultima tipologia</string>
+    <string name="virtual_a_b_partitioning">Presente, in modo virtuale</string>
+    <string name="legacy_a_b_partitioning">Presente, in modo tradizionale</string>
+    <string name="system_as_root" translatable="false">System-as-root</string>
+    <string name="mounted_like_system_as_root">Montato come system-as-root</string>
+    <string name="mounted_like_device_as_root">Montato come device-as-root</string>
+    <string name="mounted_like_system_on_block">Montato come system-on-block</string>
+    <string name="project_treble_description">\"Project Treble\" è una iniziativa di Google volta a rendere più immediati gli aggiornamenti di Android all\'uscita di una nuova versione. Project Treble si basa sul separare i file di Android da quelli strettamente legati al dispositivo (vendor). Avendo i file necessari al corretto funzionamento del device sempre al sicuro in /vendor è possibile avviare delle immagini generiche di Android, compatibili a grandi linee con tutti i device: le GSI.</string>
+    <string name="method">Metodo</string>
+    <string name="general">Generale</string>
+    <string name="chipset" translatable="false">Chipset</string>
+    <string name="memory">Memoria</string>
+    <string name="identification">Identificativo</string>
+    <string name="display_resolution">Risoluzione</string>
+    <string name="battery">Batteria</string>
+    <string name="processor">Processore</string>
+    <string name="graphic_card">Scheda grafica</string>
+    <string name="architecture">Architettura</string>
+    <string name="ram" translatable="false">RAM</string>
+    <string name="intenal_memory">Memoria interna</string>
+    <string name="external_memory">Memoria esterna</string>
+    <string name="display">Display</string>
+    <string name="dpi">DPI</string>
+    <string name="dimensions">Dimensioni</string>
+    <string name="refresh_rate">Frequenza di aggiornamento</string>
+    <string name="android">Android</string>
+    <string name="version">Version</string>
+    <string name="security_patch">Patch di sicurezza</string>
+    <string name="api_21_required">API >= 21 richiesto</string>
+    <string name="api_18_required">API >= 18 richiesto</string>
+    <string name="not_mounted">Non montata</string>
+    <string name="grammatical_particle_of">di</string>
+    <string name="compatible_but_hidden">Compatibile, ma nascosto</string>
+</resources>
