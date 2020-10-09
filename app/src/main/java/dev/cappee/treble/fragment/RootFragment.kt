@@ -1,11 +1,11 @@
-package dev.gabrielecappellaro.deviceinfo.fragment
+package dev.cappee.treble.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import dev.gabrielecappellaro.deviceinfo.R
+import dev.cappee.treble.R
 
 class RootFragment : Fragment() {
 

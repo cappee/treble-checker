@@ -1,8 +1,8 @@
-package dev.gabrielecappellaro.deviceinfo.helper
+package dev.cappee.treble.helper
 
 import android.content.Context
-import dev.gabrielecappellaro.deviceinfo.R
-import dev.gabrielecappellaro.deviceinfo.model.Mount
+import dev.cappee.treble.R
+import dev.cappee.treble.model.Mount
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader

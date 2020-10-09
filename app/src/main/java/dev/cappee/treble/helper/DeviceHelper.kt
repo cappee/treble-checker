@@ -1,4 +1,4 @@
-package dev.gabrielecappellaro.deviceinfo.helper
+package dev.cappee.treble.helper
 
 import android.app.ActivityManager
 import android.content.Context
@@ -10,7 +10,7 @@ import android.os.StatFs
 import android.util.DisplayMetrics
 import android.view.Display
 import android.view.WindowManager
-import dev.gabrielecappellaro.deviceinfo.R
+import dev.cappee.treble.R
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.*

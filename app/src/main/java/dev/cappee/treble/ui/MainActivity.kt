@@ -1,16 +1,17 @@
-package dev.gabrielecappellaro.deviceinfo.ui
+package dev.cappee.treble.ui
 
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import dev.gabrielecappellaro.deviceinfo.R
-import dev.gabrielecappellaro.deviceinfo.adapter.ViewPagerAdaper
+import dev.cappee.treble.R
+import dev.cappee.treble.adapter.ViewPagerAdaper
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.microedition.khronos.opengles.GL10
 

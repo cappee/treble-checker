@@ -1,4 +1,4 @@
-package dev.gabrielecappellaro.deviceinfo.fragment
+package dev.cappee.treble.fragment
 
 import android.app.ActivityManager
 import android.content.Context
@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.google.android.material.textview.MaterialTextView
-import dev.gabrielecappellaro.deviceinfo.R
-import dev.gabrielecappellaro.deviceinfo.helper.DeviceHelper
+import dev.cappee.treble.R
+import dev.cappee.treble.helper.DeviceHelper
 
 
 class DeviceFragment : Fragment() {

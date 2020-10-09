@@ -1,4 +1,4 @@
-package dev.gabrielecappellaro.deviceinfo
+package dev.cappee.treble
 
 import org.junit.Test
 

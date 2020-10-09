@@ -1,4 +1,4 @@
-package dev.gabrielecappellaro.deviceinfo.fragment
+package dev.cappee.treble.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,8 +10,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
-import dev.gabrielecappellaro.deviceinfo.R
-import dev.gabrielecappellaro.deviceinfo.helper.TrebleHelper
+import dev.cappee.treble.R
+import dev.cappee.treble.helper.TrebleHelper
 
 class TrebleFragment : Fragment() {
 

@@ -1,4 +1,4 @@
-package dev.gabrielecappellaro.deviceinfo.model
+package dev.cappee.treble.model
 
 data class Mount(
     val device: String,

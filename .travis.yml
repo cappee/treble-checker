@@ -3,8 +3,8 @@ os: linux
 dist: trusty
 android:
   components:
-    - build-tools-29.0.3
-    - android-29
+    - build-tools-30.0.2
+    - android-30
     - tools
 before_install:
   - cd $TRAVIS_BUILD_DIR/
