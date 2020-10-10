@@ -6,10 +6,10 @@ android:
     - build-tools-30.0.2
     - android-30
     - tools
-licenses:
-  - 'android-sdk-license-.+'
-  - 'android-sdk-preview-license-.+'
-  - 'google-gdk-license-.+'
+  licenses:
+    - 'android-sdk-license-.+'
+    - 'android-sdk-preview-license-.+'
+    - 'google-gdk-license-.+'
 before_install:
   - cd $TRAVIS_BUILD_DIR/
   - chmod +x gradlew
