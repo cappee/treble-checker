@@ -3,17 +3,12 @@ os: linux
 dist: trusty
 android:
   components:
-    - build-tools-30.0.2
-    - android-30
+    - build-tools-29.0.3
+    - android-29
     - tools
-  licenses:
-    - 'android-sdk-license-.+'
-    - 'android-sdk-preview-license-.+'
-    - 'google-gdk-license-.+'
 before_install:
   - cd $TRAVIS_BUILD_DIR/
   - chmod +x gradlew
-  - yes | sdkmanager "build-tools-30.0.2;android-30"
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
