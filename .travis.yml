@@ -13,7 +13,7 @@ android:
 before_install:
   - cd $TRAVIS_BUILD_DIR/
   - chmod +x gradlew
-  - yes | /usr/local/android-sdk/tools/bin/sdkmanager --licenses
+  - yes | sdkmanager "build-tools-30.0.2;android-30"
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
