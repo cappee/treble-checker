@@ -15,6 +15,8 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 
 class DeviceHelper {
@@ -29,9 +31,7 @@ class DeviceHelper {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
                 val chargeCounter = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
-                println("CHARGECOUNTER: " + chargeCounter)
                 val capacity = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
-                println("CAPACITY: " + capacity)
                 return "~" + (((chargeCounter / 1000) * 100) / capacity).toString() + " mAh"
             }
             return context.getString(R.string.api_21_required)
@@ -49,18 +49,18 @@ class DeviceHelper {
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
             }
-            return if (!(map.get("Hardware") == null)) {
-                map.get("Hardware").toString()
+            return if (map["Hardware"] != null) {
+                map["Hardware"].toString()
             } else {
-                map.get("model name").toString()
+                map["model name"].toString()
             }
         }
 
         fun cpuArch() : String {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                return Build.SUPPORTED_ABIS[0]
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Build.SUPPORTED_ABIS[0]
             } else {
-                return Build.CPU_ABI
+                Build.CPU_ABI
             }
         }
 
@@ -77,37 +77,41 @@ class DeviceHelper {
         }
 
         fun internalStorage(context: Context) : String {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 val root = Environment.getRootDirectory()
                 val data = Environment.getDataDirectory()
                 val sizeBytes = StatFs(root.path).totalBytes + StatFs(data.path).totalBytes
-                return String.format("%.1f", sizeBytes / 1073741824.0) + " Gb (" + String.format("%.1f", StatFs(root.path).totalBytes / 1073741824.0) + "gb " + context.getString(R.string.grammatical_particle_of) + " /root)"
+                String.format("%.1f", sizeBytes / 1073741824.0) + " Gb (" + String.format("%.1f", StatFs(root.path).totalBytes / 1073741824.0) + "gb " + context.getString(R.string.grammatical_particle_of) + " /root)"
             } else {
-                return context.getString(R.string.api_18_required)
+                context.getString(R.string.api_18_required)
             }
         }
 
         fun externalStorage(context: Context) : String {
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED || Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED_READ_ONLY) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    val externalDirs: Array<File> = context.getExternalFilesDirs(null)
-                    val resultDirs = ArrayList<String>()
-                    for (file in externalDirs) {
-                        val path: String = file.getPath().split("/Android").get(0)
-                        if ( Environment.isExternalStorageRemovable(file)) {
-                            resultDirs.add(path)
+                when {
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
+                        val externalDirs: Array<File> = context.getExternalFilesDirs(null)
+                        val resultDirs = ArrayList<String>()
+                        for (file in externalDirs) {
+                            val path: String = file.path.split("/Android")[0]
+                            if ( Environment.isExternalStorageRemovable(file)) {
+                                resultDirs.add(path)
+                            }
                         }
+                        var storageDirectories = ""
+                        for (i in 0 until resultDirs.size)
+                            storageDirectories += resultDirs[i]
+                        val ext = StatFs(storageDirectories)
+                        return String.format("%.1f", ext.totalBytes / 1073741824.0) + " Gb"
                     }
-                    var storageDirectories = ""
-                    for (i in 0 until resultDirs.size)
-                        storageDirectories = storageDirectories + resultDirs.get(i)
-                    val ext = StatFs(storageDirectories)
-                    return String.format("%.1f", ext.totalBytes / 1073741824.0) + " Gb"
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    val ext = StatFs(Environment.getExternalStorageDirectory().path)
-                    return String.format("%.1f", ext.totalBytes / 1073741824.0) + " Gb"
-                } else {
-                    return context.getString(R.string.api_18_required)
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 -> {
+                        val ext = StatFs(Environment.getExternalStorageDirectory().path)
+                        return String.format("%.1f", ext.totalBytes / 1073741824.0) + " Gb"
+                    }
+                    else -> {
+                        return context.getString(R.string.api_18_required)
+                    }
                 }
             } else {
                 return context.getString(R.string.not_mounted)
@@ -121,9 +125,9 @@ class DeviceHelper {
             display.getMetrics(displayMetrics)
             val point = Point()
             Display::class.java.getMethod("getRealSize", Point::class.java).invoke(display, point)
-            val x = Math.pow((point.x / displayMetrics.xdpi).toDouble(), 2.0)
-            val y = Math.pow((point.y / displayMetrics.ydpi).toDouble(), 2.0)
-            return String.format("%.1f", Math.sqrt(x + y)) + "\""
+            val x = (point.x / displayMetrics.xdpi).toDouble().pow(2.0)
+            val y = (point.y / displayMetrics.ydpi).toDouble().pow(2.0)
+            return String.format("%.1f", sqrt(x + y)) + "\""
         }
 
         //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
@@ -163,7 +167,7 @@ class DeviceHelper {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            return batteryCapacity.toString() + " mAh"
+            return "$batteryCapacity mAh"
         }
 
     }
