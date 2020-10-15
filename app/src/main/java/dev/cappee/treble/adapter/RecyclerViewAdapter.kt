@@ -36,7 +36,7 @@ class RecyclerViewAdapter(private val context: Context?, private val titles: Arr
         holder.title.text = context?.getString(titles[position])
         val subtitles : Array<Int> = allSubtitles[position]
         val data : Array<String> = allData[position]
-        val buttons: Array<Int> = allButtons[position]
+        val buttons: Array<Int> = allButtons!![position]
         when (subtitles.size) {
             4 -> {
                 holder.subtitleFirst.text = context?.getString(subtitles[0])
