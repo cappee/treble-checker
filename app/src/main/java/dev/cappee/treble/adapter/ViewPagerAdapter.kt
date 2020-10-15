@@ -8,7 +8,7 @@ import dev.cappee.treble.fragment.DeviceFragment
 import dev.cappee.treble.fragment.RootFragment
 import dev.cappee.treble.fragment.TrebleFragment
 
-class ViewPagerAdaper(fragmentActivity: FragmentActivity, private val bundle: Bundle) : FragmentStateAdapter(fragmentActivity) {
+class ViewPagerAdapter(fragmentActivity: FragmentActivity, private val bundle: Bundle) : FragmentStateAdapter(fragmentActivity) {
 
     override fun getItemCount(): Int {
         return 3

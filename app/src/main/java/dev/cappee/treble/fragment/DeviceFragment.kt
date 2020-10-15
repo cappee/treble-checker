@@ -8,47 +8,53 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
-import com.google.android.material.textview.MaterialTextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import dev.cappee.treble.R
+import dev.cappee.treble.adapter.RecyclerViewAdapter
 import dev.cappee.treble.helper.DeviceHelper
-
+import kotlinx.android.synthetic.main.fragment_device.*
+import kotlin.concurrent.thread
 
 class DeviceFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_device, container, false)
 
-        //Binding elements
-        val textViewBrandModelCodename: MaterialTextView = view.findViewById(R.id.textview_brand_model_codename)
-        val textViewBattery: MaterialTextView = view.findViewById(R.id.textview_battery)
-        val textViewProcessor: MaterialTextView = view.findViewById(R.id.textview_processor)
-        val textViewVideoCard: MaterialTextView = view.findViewById(R.id.textview_video_card)
-        val textViewArchitecture: MaterialTextView = view.findViewById(R.id.textview_architecture)
-        val textViewRAM: MaterialTextView = view.findViewById(R.id.textview_ram)
-        val textViewInternalMemory: MaterialTextView = view.findViewById(R.id.textview_internal_memory)
-        val textViewExternalMemory: MaterialTextView = view.findViewById(R.id.textview_external_memory)
-        val textViewDisplayDimension: MaterialTextView = view.findViewById(R.id.textview_display_dimensions)
-        val textViewDisplayResolution: MaterialTextView = view.findViewById(R.id.textview_display_resolution)
-        val textViewDisplayDPI: MaterialTextView = view.findViewById(R.id.textview_display_dpi)
-        val textViewRefreshRate: MaterialTextView = view.findViewById(R.id.textview_refresh_rate)
-
-        //Setting helper values on textviews
-        Thread {
-            textViewBrandModelCodename.text = DeviceHelper.identification()
-            textViewBattery.text = DeviceHelper.batteryCapacityExperimental(requireContext())
-            textViewProcessor.text = DeviceHelper.cpu()
-            textViewArchitecture.text = DeviceHelper.cpuArch()
-            textViewRAM.text = DeviceHelper.totalRam(requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
-            textViewInternalMemory.text = DeviceHelper.internalStorage(requireContext())
-            textViewExternalMemory.text = DeviceHelper.externalStorage(requireContext())
-            textViewDisplayDimension.text = DeviceHelper.displaySize(requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-            textViewDisplayResolution.text = DeviceHelper.displayResolution(requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-            textViewDisplayDPI.text = DeviceHelper.displayDPI(requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-            textViewRefreshRate.text = DeviceHelper.displayRefreshRate(requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-        }.run()
-        textViewVideoCard.text = arguments?.getString("GPU_INFO")
+        val titles: Array<Int> = arrayOf(R.string.general, R.string.chipset, R.string.memory, R.string.display)
+        val subtitleGeneral: Array<Int> = arrayOf(R.string.identification, R.string.battery)
+        val subtitleChipset: Array<Int> = arrayOf(R.string.processor, R.string.graphic_card, R.string.architecture)
+        val subtitleMemory: Array<Int> = arrayOf(R.string.ram, R.string.intenal_memory, R.string.external_memory)
+        val subtitleDisplay: Array<Int> = arrayOf(R.string.dimensions, R.string.display_resolution, R.string.dpi, R.string.refresh_rate)
+        thread {
+            val dataGeneral: Array<String> = arrayOf(DeviceHelper.identification(),
+                DeviceHelper.batteryCapacityExperimental(context!!))
+            val dataChipset: Array<String> = arrayOf(DeviceHelper.cpu(),
+                arguments?.getString("GPU_INFO").toString(), DeviceHelper.cpuArch())
+            val dataMemory: Array<String> = arrayOf(DeviceHelper.totalRam(context?.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager),
+                DeviceHelper.internalStorage(context!!),
+                DeviceHelper.externalStorage(context!!))
+            val dataDisplay: Array<String> = arrayOf(DeviceHelper.displaySize(context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager),
+                DeviceHelper.displayResolution(context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager),
+                DeviceHelper.displayDPI(context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager),
+                DeviceHelper.displayRefreshRate(context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager))
+            runOnUiThread {
+                recyclerViewDevice.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                recyclerViewDevice.adapter = RecyclerViewAdapter(context,
+                    titles,
+                    arrayOf(subtitleGeneral, subtitleChipset, subtitleMemory, subtitleDisplay),
+                    arrayOf(dataGeneral, dataChipset, dataMemory, dataDisplay),
+                    null
+                )
+            }
+        }
 
         return view
+    }
+
+    private fun Fragment?.runOnUiThread(action: () -> Unit) {
+        this ?: return
+        if (!isAdded) return
+        activity?.runOnUiThread(action)
     }
 
 }

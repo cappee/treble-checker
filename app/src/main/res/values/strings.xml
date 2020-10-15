@@ -48,4 +48,10 @@
     <string name="not_mounted">Non montata</string>
     <string name="grammatical_particle_of">di</string>
     <string name="compatible_but_hidden">Compatibile, ma nascosto</string>
+    <string name="superuser">Superuser</string>
+    <string name="superuser_description">Me jodiste toda la life</string>
+    <string name="busybox">BusyBox</string>
+    <string name="busybox_description">Es mejor si no las llamas, las llama no se soportan</string>
+    <string name="a_b_partitioning_description">Que extrañarte nunca va a ser suficiente</string>
+    <string name="system_as_root_description">Solo agarrame y sueltame</string>
 </resources>

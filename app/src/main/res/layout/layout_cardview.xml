@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    style="@style/WidgetMaterialized.Card.Elevated">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textViewPlaceholderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/AppearanceMaterialized.Title"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textViewPlaceholderSubtitleFirst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            style="@style/AppearanceMaterialized.Body"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textViewPlaceholderFirst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            style="@style/AppearanceMaterialized.Body.Darker"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textViewPlaceholderSubtitleSecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            style="@style/AppearanceMaterialized.Body"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textViewPlaceholderSecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            style="@style/AppearanceMaterialized.Body.Darker"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textViewPlaceholderSubtitleThird"
+            style="@style/AppearanceMaterialized.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textViewPlaceholderThird"
+            style="@style/AppearanceMaterialized.Body.Darker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textViewPlaceholderSubtitleFourth"
+            style="@style/AppearanceMaterialized.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textViewPlaceholderFourth"
+            style="@style/AppearanceMaterialized.Body.Darker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonMoreInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/more_info"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
