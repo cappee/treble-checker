@@ -25,7 +25,7 @@ class RootFragment : Fragment() {
         val subtitleBusyBox: Array<String> = arrayOf("Installed", "Version")
         thread {
             val dataSuperuser: Array<String> = arrayOf(getString(RootHelper.rootPermissions()),
-                RootHelper.rootPath(),
+                RootHelper.rootPath(context!!),
                 "Magisk")
             val dataBusyBox: Array<String> = arrayOf("No", "Not installed")
             runOnUiThread {
