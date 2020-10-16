@@ -21,16 +21,20 @@ class RootFragment : Fragment() {
         val titles: Array<Int> = arrayOf(R.string.superuser, R.string.busybox)
         val buttonSuperuser: Array<Int> = arrayOf(R.string.superuser, R.string.superuser_description)
         val buttonBusyBox: Array<Int> = arrayOf(R.string.busybox, R.string.busybox_description)
-        val subtitlesSuperuser: Array<Int> = arrayOf(R.string.root_permissions, R.string.root_path, R.string.superuser_app)
-        val subtitleBusyBox: Array<String> = arrayOf("Installed", "Version")
+        val subtitlesSuperuser: Array<Int> = arrayOf(R.string.root_permissions, R.string.root_path)
+        val subtitleBusyBox: Array<Int> = arrayOf(R.string.status, R.string.build_date)
         thread {
             val dataSuperuser: Array<String> = arrayOf(getString(RootHelper.rootPermissions()),
-                RootHelper.rootPath(context!!),
-                "Magisk")
-            val dataBusyBox: Array<String> = arrayOf("No", "Not installed")
+                RootHelper.rootPath(context!!))
+            val dataBusyBox: Array<String> = arrayOf(RootHelper.busyBoxInstalled(context!!),
+                RootHelper.busyBoxBuildDate(context!!))
             runOnUiThread {
                 recyclerViewRoot.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                recyclerViewRoot.adapter = RecyclerViewAdapter(context, titles, arrayOf(subtitlesSuperuser), arrayOf(dataSuperuser), arrayOf(buttonSuperuser))
+                recyclerViewRoot.adapter = RecyclerViewAdapter(context,
+                    titles,
+                    arrayOf(subtitlesSuperuser, subtitleBusyBox),
+                    arrayOf(dataSuperuser, dataBusyBox),
+                    arrayOf(buttonSuperuser, buttonBusyBox))
             }
         }
 

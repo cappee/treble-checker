@@ -58,6 +58,8 @@
     <string name="not_available">Non disponibili</string>
     <string name="root_permissions">Permessi di root</string>
     <string name="root_path">Percorso di root</string>
-    <string name="superuser_app">Superuser app</string>
     <string name="no_root_path_found">Nessun percorso trovato</string>
+    <string name="not_installed">Non installato</string>
+    <string name="present">Presente</string>
+    <string name="build_date">Data di complizione</string>
 </resources>
