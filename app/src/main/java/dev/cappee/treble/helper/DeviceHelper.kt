@@ -132,6 +132,14 @@ class DeviceHelper {
 
         //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
         fun displayResolution(windowManager: WindowManager) : String {
+            /*val displayMetrics: DisplayMetrics = DisplayMetrics()
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                context?.display?.getRealMetrics(displayMetrics)
+            } else {
+                val windowManager: WindowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+                val display: Display? = windowManager.defaultDisplay
+                display?.getRealMetrics(displayMetrics)
+            }*/
             val display: Display = windowManager.defaultDisplay
             val point = Point()
             display.getRealSize(point)

@@ -43,7 +43,7 @@ class DeviceFragment : Fragment() {
                     titles,
                     arrayOf(subtitleGeneral, subtitleChipset, subtitleMemory, subtitleDisplay),
                     arrayOf(dataGeneral, dataChipset, dataMemory, dataDisplay),
-                    null
+                    emptyArray()
                 )
             }
         }

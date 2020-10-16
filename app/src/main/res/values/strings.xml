@@ -54,4 +54,10 @@
     <string name="busybox_description">Es mejor si no las llamas, las llama no se soportan</string>
     <string name="a_b_partitioning_description">Que extrañarte nunca va a ser suficiente</string>
     <string name="system_as_root_description">Solo agarrame y sueltame</string>
+    <string name="available">Disponibili</string>
+    <string name="not_available">Non disponibili</string>
+    <string name="root_permissions">Permessi di root</string>
+    <string name="root_path">Percorso di root</string>
+    <string name="superuser_app">Superuser app</string>
+    <string name="no_root_path_found">Nessun percorso trovato</string>
 </resources>

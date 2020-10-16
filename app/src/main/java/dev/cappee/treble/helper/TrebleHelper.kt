@@ -14,7 +14,6 @@ class TrebleHelper {
         fun trebleStatus() : Int {
             val processTreble = Runtime.getRuntime().exec("getprop ro.treble.enabled")
             var treble: String = processTreble.inputStream.bufferedReader().use(BufferedReader::readText)
-            println(treble)
             if (treble.isNotBlank())
                 treble = treble.substring(0, treble.length - 1)
             return if (treble == "true") {
@@ -42,8 +41,6 @@ class TrebleHelper {
             if (processLite == "true")
                 vndkLite = "(" + context.getString(R.string.lite) + ")"
             val processVersion = Runtime.getRuntime().exec("getprop ro.vndk.version").inputStream.bufferedReader().use(BufferedReader::readText)
-            println("VNDK: $processVersion")
-            println("LITE: $processLite")
             return if (processVersion.substring(0, processVersion.length - 1).isNotEmpty()) {
                 processVersion.substring(0, processVersion.length - 1) + " " + vndkLite
             } else {
