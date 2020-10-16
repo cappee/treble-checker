@@ -27,6 +27,10 @@ android {
             )
         }
     }
+
+    sourceSets.all {
+        java.srcDirs("src/main/kotlin")
+    }
 }
 
 dependencies {
