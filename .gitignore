@@ -3,7 +3,10 @@
 
 #Android
 *.jks
-*.apkgit
+*.apk
+
+#Firebase
+google-services.json
 
 # Android Studio / Gradle
 *.iml
