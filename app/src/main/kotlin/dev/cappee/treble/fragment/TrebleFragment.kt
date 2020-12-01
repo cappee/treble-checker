@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.cappee.treble.R
 import dev.cappee.treble.adapter.RecyclerViewAdapter
 import dev.cappee.treble.helper.TrebleHelper
 import kotlinx.android.synthetic.main.fragment_treble.*
-import kotlin.concurrent.thread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TrebleFragment : Fragment() {
 
@@ -24,7 +26,7 @@ class TrebleFragment : Fragment() {
         val subtitleProjectTreble: Array<Int> = arrayOf(R.string.status, R.string.treble_arch, R.string.vndk_version)
         val subtitleABPartitioning: Array<Int> = arrayOf(R.string.status, R.string.seamless_updates)
         val subtitleSystemAsRoot: Array<Int> = arrayOf(R.string.status, R.string.method)
-        thread {
+        lifecycleScope.launch(Dispatchers.Main) {
             val dataProjectTreble: Array<String> = arrayOf(getString(TrebleHelper.trebleStatus()),
                 getString(TrebleHelper.trebleVersion()),
                 TrebleHelper.vndkVersion(requireContext()))
@@ -32,24 +34,17 @@ class TrebleFragment : Fragment() {
                 getString(TrebleHelper.seamlessUpdate()))
             val dataSystemAsRoot: Array<String> = arrayOf(getString(TrebleHelper.systemMount()),
                 getString(TrebleHelper.systemMountMethod()))
-            runOnUiThread {
-                recyclerViewTreble.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                recyclerViewTreble.adapter = RecyclerViewAdapter(context,
-                    titles,
-                    arrayOf(subtitleProjectTreble, subtitleABPartitioning, subtitleSystemAsRoot),
-                    arrayOf(dataProjectTreble, dataABPartitioning, dataSystemAsRoot),
-                    buttons
-                )
-            }
+            recyclerViewTreble.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            recyclerViewTreble.adapter = RecyclerViewAdapter(context,
+                titles,
+                arrayOf(subtitleProjectTreble, subtitleABPartitioning, subtitleSystemAsRoot),
+                arrayOf(dataProjectTreble, dataABPartitioning, dataSystemAsRoot),
+                buttons
+            )
+            progressBarTreble.visibility = ViewGroup.INVISIBLE
         }
 
         return view
-    }
-
-    private fun Fragment?.runOnUiThread(action: () -> Unit) {
-        this ?: return
-        if (!isAdded) return
-        activity?.runOnUiThread(action)
     }
 
 }

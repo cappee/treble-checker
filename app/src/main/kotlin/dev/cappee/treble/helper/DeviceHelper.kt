@@ -10,35 +10,37 @@ import android.os.StatFs
 import android.util.DisplayMetrics
 import android.view.Display
 import android.view.WindowManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dev.cappee.treble.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
-import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.math.pow
 import kotlin.math.sqrt
 
 
-class DeviceHelper {
+object DeviceHelper {
 
-    companion object {
+    fun identification() : String {
+        return Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
+    }
 
-        fun identification() : String {
-            return Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
+    fun batteryCapacity(context: Context) : String {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
+            val chargeCounter = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
+            val capacity = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+            return "~" + (((chargeCounter / 1000) * 100) / capacity).toString() + " mAh"
         }
+        return context.getString(R.string.api_21_required)
+    }
 
-        fun batteryCapacity(context: Context) : String {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
-                val chargeCounter = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
-                val capacity = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
-                return "~" + (((chargeCounter / 1000) * 100) / capacity).toString() + " mAh"
-            }
-            return context.getString(R.string.api_21_required)
-        }
-
-        //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-        fun cpu() : String {
+    //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
+    suspend fun cpu() : String {
+        return withContext(Dispatchers.Default) {
             val map: MutableMap<String, String> = HashMap()
             try {
                 val scanner = Scanner(File("/proc/cpuinfo"))
@@ -49,35 +51,39 @@ class DeviceHelper {
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
             }
-            return if (map["Hardware"] != null) {
+            if (map["Hardware"] != null) {
                 map["Hardware"].toString()
             } else {
                 map["model name"].toString()
             }
         }
+    }
 
-        fun cpuArch() : String {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Build.SUPPORTED_ABIS[0]
-            } else {
-                Build.CPU_ABI
-            }
+    fun cpuArch() : String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Build.SUPPORTED_ABIS[0]
+        } else {
+            Build.CPU_ABI
         }
+    }
 
-        //Ported (and simplified) from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-        fun totalRam(activityManager: ActivityManager) : String {
+    //Ported (and simplified) from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
+    suspend fun totalRam(activityManager: ActivityManager) : String {
+        return withContext(Dispatchers.Default) {
             val memoryInfo = ActivityManager.MemoryInfo()
             activityManager.getMemoryInfo(memoryInfo)
             val ram = memoryInfo.totalMem
-            return if ((ram / 1073741824.0) > 1) {
+            if ((ram / 1073741824.0) > 1) {
                 String.format("%.1f", ram / 1073741824.0) + " Gb"
             } else {
                 String.format("%.1f", ram / 1048576.0) + " Mb"
             }
         }
+    }
 
-        fun internalStorage(context: Context) : String {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+    suspend fun internalStorage(context: Context) : String {
+        return withContext(Dispatchers.Default) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 val root = Environment.getRootDirectory()
                 val data = Environment.getDataDirectory()
                 val sizeBytes = StatFs(root.path).totalBytes + StatFs(data.path).totalBytes
@@ -86,98 +92,98 @@ class DeviceHelper {
                 context.getString(R.string.api_18_required)
             }
         }
+    }
 
-        fun externalStorage(context: Context) : String {
+    suspend fun externalStorage(context: Context) : String {
+        return withContext(Dispatchers.Default) {
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED || Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED_READ_ONLY) {
                 when {
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
                         val externalDirs: Array<File> = context.getExternalFilesDirs(null)
-                        val resultDirs = ArrayList<String>()
+                        var resultDirs: Array<String> = emptyArray()
                         for (file in externalDirs) {
                             val path: String = file.path.split("/Android")[0]
-                            if ( Environment.isExternalStorageRemovable(file)) {
-                                resultDirs.add(path)
+                            if (Environment.isExternalStorageRemovable(file)) {
+                                resultDirs += path
                             }
                         }
                         var storageDirectories = ""
-                        for (i in 0 until resultDirs.size)
-                            storageDirectories += resultDirs[i]
-                        val ext = StatFs(storageDirectories)
-                        return String.format("%.1f", ext.totalBytes / 1073741824.0) + " Gb"
+                        for (element in resultDirs)
+                            storageDirectories += element
+                        FirebaseCrashlytics.getInstance().log(storageDirectories)
+                        val ext: StatFs
+                        try {
+                            ext = StatFs(storageDirectories)
+                        } catch (e: Exception) {
+                            return@withContext context.getString(R.string.not_mounted)
+                        }
+                        String.format("%.1f", ext.totalBytes / 1073741824.0) + " Gb"
                     }
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 -> {
-                        val ext = StatFs(Environment.getExternalStorageDirectory().path)
-                        return String.format("%.1f", ext.totalBytes / 1073741824.0) + " Gb"
+                        val ext: StatFs
+                        try {
+                            ext = StatFs(Environment.getExternalStorageDirectory().path)
+                        } catch (e: Exception) {
+                            return@withContext context.getString(R.string.not_mounted)
+                        }
+                        String.format("%.1f", ext.totalBytes / 1073741824.0) + " Gb"
                     }
                     else -> {
-                        return context.getString(R.string.api_18_required)
+                        context.getString(R.string.api_18_required)
                     }
                 }
             } else {
-                return context.getString(R.string.not_mounted)
+                context.getString(R.string.not_mounted)
             }
         }
+    }
 
-        //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-        fun displaySize(windowManager: WindowManager) : String {
-            val display = windowManager.defaultDisplay
-            val displayMetrics = DisplayMetrics()
-            display.getMetrics(displayMetrics)
-            val point = Point()
-            Display::class.java.getMethod("getRealSize", Point::class.java).invoke(display, point)
-            val x = (point.x / displayMetrics.xdpi).toDouble().pow(2.0)
-            val y = (point.y / displayMetrics.ydpi).toDouble().pow(2.0)
-            return String.format("%.1f", sqrt(x + y)) + "\""
+    private val displayMetrics: DisplayMetrics = DisplayMetrics()
+    private val displayPoint: Point = Point()
+
+    fun initDisplay(context: Context) {
+        context.display?.getRealSize(displayPoint)
+        context.display?.getRealMetrics(displayMetrics)
+    }
+
+    //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
+    fun displaySize() : String {
+        val x = (displayPoint.x / displayMetrics.xdpi).toDouble().pow(2.0)
+        val y = (displayPoint.y / displayMetrics.ydpi).toDouble().pow(2.0)
+        return String.format("%.1f", sqrt(x + y)) + "\""
+    }
+
+    //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
+    fun displayResolution(): String {
+        return displayMetrics.heightPixels.toString() + "x" + displayMetrics.widthPixels.toString()
+    }
+
+    //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
+    fun displayDPI(): String {
+        return displayMetrics.densityDpi.toString()
+    }
+
+    //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
+    fun displayRefreshRate(windowManager: WindowManager) : String {
+        return String.format("%.0f", windowManager.defaultDisplay.refreshRate) + " Hz"
+    }
+
+    fun batteryCapacityExperimental(context: Context) : String {
+        var powerProfile_: Any? = null
+        val POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile"
+        try {
+            powerProfile_ = Class.forName(POWER_PROFILE_CLASS)
+                .getConstructor(Context::class.java).newInstance(context)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-
-        //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-        fun displayResolution(windowManager: WindowManager) : String {
-            /*val displayMetrics: DisplayMetrics = DisplayMetrics()
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                context?.display?.getRealMetrics(displayMetrics)
-            } else {
-                val windowManager: WindowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-                val display: Display? = windowManager.defaultDisplay
-                display?.getRealMetrics(displayMetrics)
-            }*/
-            val display: Display = windowManager.defaultDisplay
-            val point = Point()
-            display.getRealSize(point)
-            return "" + point.y + "x" + point.x
+        var batteryCapacity = 0.0
+        try {
+            batteryCapacity = Class.forName(POWER_PROFILE_CLASS).getMethod("getAveragePower", String::class.java).invoke(powerProfile_, "battery.capacity") as Double
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-
-        //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-        fun displayDPI(windowManager: WindowManager) : String {
-            val display = windowManager.defaultDisplay
-            val displayMetrics = DisplayMetrics()
-            display.getMetrics(displayMetrics)
-            return displayMetrics.densityDpi.toString()
-        }
-
-        //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-        fun displayRefreshRate(windowManager: WindowManager) : String {
-            val display = windowManager.defaultDisplay
-            return String.format("%.0f", display.refreshRate) + " Hz"
-        }
-
-        fun batteryCapacityExperimental(context: Context) : String {
-            var powerProfile_: Any? = null
-            val POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile"
-            try {
-                powerProfile_ = Class.forName(POWER_PROFILE_CLASS)
-                    .getConstructor(Context::class.java).newInstance(context)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            var batteryCapacity = 0.0
-            try {
-                batteryCapacity = Class.forName(POWER_PROFILE_CLASS).getMethod("getAveragePower", String::class.java).invoke(powerProfile_, "battery.capacity") as Double
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return "$batteryCapacity mAh"
-        }
-
+        return "$batteryCapacity mAh"
     }
 
 }

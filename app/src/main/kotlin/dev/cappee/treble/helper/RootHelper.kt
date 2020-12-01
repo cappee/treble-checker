@@ -2,14 +2,15 @@ package dev.cappee.treble.helper
 
 import android.content.Context
 import dev.cappee.treble.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.File
 
-class RootHelper {
+object RootHelper {
 
-    companion object {
-
-        fun rootPermissions() : Int {
+    suspend fun rootPermissions() : Int {
+        return withContext(Dispatchers.Default) {
             val possiblePath = arrayOf(
                 "/sbin/",
                 "/system/bin/",
@@ -22,13 +23,15 @@ class RootHelper {
             )
             for (path in possiblePath) {
                 if (File(path + "su").exists()) {
-                    return R.string.available
+                    R.string.available
                 }
             }
-            return R.string.not_available
+            R.string.not_available
         }
+    }
 
-        fun rootPath(context: Context) : String {
+    suspend fun rootPath(context: Context) : String {
+        return withContext(Dispatchers.Default) {
             val possiblePath = arrayOf(
                 "/sbin/",
                 "/system/bin/",
@@ -41,27 +44,31 @@ class RootHelper {
             )
             for (path in possiblePath) {
                 if (File(path + "su").exists()) {
-                    return path + "su"
+                    path + "su"
                 }
             }
-            return context.getString(R.string.no_root_path_found)
+            context.getString(R.string.no_root_path_found)
         }
+    }
 
-        fun busyBoxInstalled(context: Context) : String {
-            return try {
+    suspend fun busyBoxInstalled(context: Context) : String {
+        return withContext(Dispatchers.Default) {
+            try {
                 val line = Runtime.getRuntime().exec("busybox").inputStream.bufferedReader().use(BufferedReader::readLine)
                 val version = line.split("\\s+".toRegex()).toTypedArray()[1]
-                return context.getString(R.string.present) + ", " + version.subSequence(1, 7)
+                context.getString(R.string.present) + ", " + version.subSequence(1, 7)
             } catch (e: Exception) {
                 context.getString(R.string.not_installed)
             }
         }
+    }
 
-        fun busyBoxBuildDate(context: Context) : String {
-            return try {
+    suspend fun busyBoxBuildDate(context: Context) : String {
+        return withContext(Dispatchers.Default) {
+            try {
                 val line = Runtime.getRuntime().exec("busybox").inputStream.bufferedReader().use(BufferedReader::readLine)
                 val date = line.substringAfter("(", "")
-                return date.subSequence(0, 10).toString()
+                date.subSequence(0, 10).toString()
             } catch (e: Exception) {
                 context.getString(R.string.not_installed)
             }

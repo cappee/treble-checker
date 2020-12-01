@@ -5,12 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.cappee.treble.R
 import dev.cappee.treble.adapter.RecyclerViewAdapter
 import dev.cappee.treble.helper.RootHelper
 import kotlinx.android.synthetic.main.fragment_root.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
 class RootFragment : Fragment() {
@@ -23,29 +26,21 @@ class RootFragment : Fragment() {
         val buttonBusyBox: Array<Int> = arrayOf(R.string.busybox, R.string.busybox_description)
         val subtitlesSuperuser: Array<Int> = arrayOf(R.string.root_permissions, R.string.root_path)
         val subtitleBusyBox: Array<Int> = arrayOf(R.string.status, R.string.build_date)
-        thread {
+        lifecycleScope.launch(Dispatchers.Main) {
             val dataSuperuser: Array<String> = arrayOf(getString(RootHelper.rootPermissions()),
                 RootHelper.rootPath(context!!))
             val dataBusyBox: Array<String> = arrayOf(RootHelper.busyBoxInstalled(context!!),
                 RootHelper.busyBoxBuildDate(context!!))
-            runOnUiThread {
-                recyclerViewRoot.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                recyclerViewRoot.adapter = RecyclerViewAdapter(context,
-                    titles,
-                    arrayOf(subtitlesSuperuser, subtitleBusyBox),
-                    arrayOf(dataSuperuser, dataBusyBox),
-                    arrayOf(buttonSuperuser, buttonBusyBox))
-            }
+            recyclerViewRoot.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            recyclerViewRoot.adapter = RecyclerViewAdapter(context,
+                titles,
+                arrayOf(subtitlesSuperuser, subtitleBusyBox),
+                arrayOf(dataSuperuser, dataBusyBox),
+                arrayOf(buttonSuperuser, buttonBusyBox))
+            progressBarRoot.visibility = ViewGroup.INVISIBLE
         }
 
-
         return view
-    }
-
-    private fun Fragment?.runOnUiThread(action: () -> Unit) {
-        this ?: return
-        if (!isAdded) return
-        activity?.runOnUiThread(action)
     }
 
 }
