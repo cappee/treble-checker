@@ -6,20 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dev.cappee.treble.R
-import dev.cappee.treble.adapter.RecyclerViewAdapter
-import dev.cappee.treble.databinding.FragmentTrebleBinding
+import dev.cappee.treble.main.recycler.RecyclerViewAdapter
+import dev.cappee.treble.databinding.FragmentMainBinding
+import dev.cappee.treble.main.recycler.ItemDecoration
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class TrebleFragment : Fragment() {
 
-    private var _binding: FragmentTrebleBinding? = null
+    private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentTrebleBinding.inflate(inflater, container, false)
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -32,23 +36,30 @@ class TrebleFragment : Fragment() {
         val subtitleABPartitioning: Array<Int> = arrayOf(R.string.status, R.string.seamless_updates)
         val subtitleSystemAsRoot: Array<Int> = arrayOf(R.string.status, R.string.method)
         lifecycleScope.launch(Dispatchers.Main) {
-            val dataProjectTreble: Array<String> = arrayOf(getString(TrebleHelper.trebleStatus()),
-                getString(TrebleHelper.trebleVersion()),
-                TrebleHelper.vndkVersion(requireContext()))
-            val dataABPartitioning: Array<String> = arrayOf(getString(TrebleHelper.partitionStatus()),
-                getString(TrebleHelper.seamlessUpdate()))
-            val dataSystemAsRoot: Array<String> = arrayOf(getString(TrebleHelper.systemMount()),
-                getString(TrebleHelper.systemMountMethod()))
-            binding.recyclerViewTreble.apply {
+            val dataProjectTreble = async(Dispatchers.Default) {
+                arrayOf(getString(TrebleHelper.trebleStatus()),
+                    getString(TrebleHelper.trebleVersion()),
+                    TrebleHelper.vndkVersion(requireContext()))
+            }
+            val dataABPartitioning = async(Dispatchers.Default) {
+                arrayOf(getString(TrebleHelper.partitionStatus()),
+                    getString(TrebleHelper.seamlessUpdate()))
+            }
+            val dataSystemAsRoot = async(Dispatchers.Default) {
+                arrayOf(getString(TrebleHelper.systemMount()),
+                    getString(TrebleHelper.systemMountMethod()))
+            }
+            binding.recyclerView.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                addItemDecoration(ItemDecoration(resources.getDimensionPixelSize(R.dimen.recycler_items_margin)))
                 adapter = RecyclerViewAdapter(context,
                     titles,
                     arrayOf(subtitleProjectTreble, subtitleABPartitioning, subtitleSystemAsRoot),
-                    arrayOf(dataProjectTreble, dataABPartitioning, dataSystemAsRoot),
+                    arrayOf(dataProjectTreble.await(), dataABPartitioning.await(), dataSystemAsRoot.await()),
                     buttons
                 )
             }
-            binding.progressBarTreble.visibility = ViewGroup.INVISIBLE
+            binding.progressBar.visibility = ViewGroup.INVISIBLE
         }
     }
 

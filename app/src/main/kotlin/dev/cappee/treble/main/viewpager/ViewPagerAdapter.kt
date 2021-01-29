@@ -1,4 +1,4 @@
-package dev.cappee.treble.adapter
+package dev.cappee.treble.main.viewpager
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

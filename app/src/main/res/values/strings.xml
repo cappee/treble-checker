@@ -62,4 +62,5 @@
     <string name="not_installed">Non installato</string>
     <string name="present">Presente</string>
     <string name="build_date">Data di complizione</string>
+    <string name="not_found">Non trovato</string>
 </resources>

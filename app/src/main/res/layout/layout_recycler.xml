@@ -4,10 +4,7 @@
     android:id="@+id/cardViewPlaceholder"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    style="@style/WidgetMaterialized.Card.Elevated">
+    style="@style/Widget.Card.Elevated">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +16,7 @@
             android:id="@+id/textViewPlaceholderTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/AppearanceMaterialized.Title"/>
+            style="@style/Appearance.Title"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textViewPlaceholderSubtitleFirst"
@@ -28,7 +25,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
-            style="@style/AppearanceMaterialized.Body"/>
+            style="@style/Appearance.Body"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textViewPlaceholderFirst"
@@ -36,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
-            style="@style/AppearanceMaterialized.Body.Darker"/>
+            style="@style/Appearance.Body.Darker"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textViewPlaceholderSubtitleSecond"
@@ -45,7 +42,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
-            style="@style/AppearanceMaterialized.Body"/>
+            style="@style/Appearance.Body"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textViewPlaceholderSecond"
@@ -53,11 +50,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
-            style="@style/AppearanceMaterialized.Body.Darker"/>
+            style="@style/Appearance.Body.Darker"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textViewPlaceholderSubtitleThird"
-            style="@style/AppearanceMaterialized.Body"
+            style="@style/Appearance.Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -66,7 +63,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textViewPlaceholderThird"
-            style="@style/AppearanceMaterialized.Body.Darker"
+            style="@style/Appearance.Body.Darker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -74,7 +71,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textViewPlaceholderSubtitleFourth"
-            style="@style/AppearanceMaterialized.Body"
+            style="@style/Appearance.Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -83,7 +80,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textViewPlaceholderFourth"
-            style="@style/AppearanceMaterialized.Body.Darker"
+            style="@style/Appearance.Body.Darker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"

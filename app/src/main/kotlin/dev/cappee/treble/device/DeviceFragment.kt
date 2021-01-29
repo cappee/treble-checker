@@ -11,18 +11,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.cappee.treble.R
-import dev.cappee.treble.adapter.RecyclerViewAdapter
-import dev.cappee.treble.databinding.FragmentDeviceBinding
+import dev.cappee.treble.main.recycler.RecyclerViewAdapter
+import dev.cappee.treble.databinding.FragmentMainBinding
+import dev.cappee.treble.main.recycler.ItemDecoration
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class DeviceFragment : Fragment() {
 
-    private var _binding: FragmentDeviceBinding? = null
+    private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentDeviceBinding.inflate(inflater, container, false)
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -33,32 +35,37 @@ class DeviceFragment : Fragment() {
         val subtitleMemory: Array<Int> = arrayOf(R.string.ram, R.string.intenal_memory, R.string.external_memory)
         val subtitleDisplay: Array<Int> = arrayOf(R.string.dimensions, R.string.display_resolution, R.string.dpi, R.string.refresh_rate)
         lifecycleScope.launch(Dispatchers.Main) {
-            val dataGeneral: Array<String> = arrayOf(
-                DeviceHelper.identification(),
-                DeviceHelper.batteryCapacityExperimental(context!!))
-            val dataChipset: Array<String> = arrayOf(
-                DeviceHelper.cpu(),
-                arguments?.getString("GPU_INFO").toString(), DeviceHelper.cpuArch())
-            val dataMemory: Array<String> = arrayOf(
-                DeviceHelper.totalRam(context?.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager),
-                DeviceHelper.internalStorage(context!!),
-                DeviceHelper.externalStorage(context!!))
-            DeviceHelper.initDisplay(context!!)
-            val dataDisplay: Array<String> = arrayOf(
-                DeviceHelper.displaySize(),
-                DeviceHelper.displayResolution(),
-                DeviceHelper.displayDPI(),
-                DeviceHelper.displayRefreshRate(context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager))
-            binding.recyclerViewDevice.apply {
+            val dataGeneral = async(Dispatchers.Default) {
+                arrayOf(DeviceHelper.identification(),
+                    DeviceHelper.batteryCapacityExperimental(context!!))
+            }
+            val dataChipset = async(Dispatchers.Default) {
+                arrayOf(DeviceHelper.cpu(),
+                    arguments?.getString("GPU_INFO").toString(), DeviceHelper.cpuArch())
+            }
+            val dataMemory = async(Dispatchers.Default) {
+                arrayOf(DeviceHelper.totalRam(context?.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager),
+                    DeviceHelper.internalStorage(context!!),
+                    DeviceHelper.externalStorage(context!!))
+            }
+            DeviceHelper.initDisplay(context!!, context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+            val dataDisplay = async(Dispatchers.Default) {
+                arrayOf(DeviceHelper.displaySize(),
+                    DeviceHelper.displayResolution(),
+                    DeviceHelper.displayDPI(),
+                    DeviceHelper.displayRefreshRate())
+            }
+            binding.recyclerView.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                addItemDecoration(ItemDecoration(resources.getDimensionPixelSize(R.dimen.recycler_items_margin)))
                 adapter = RecyclerViewAdapter(context,
                     titles,
                     arrayOf(subtitleGeneral, subtitleChipset, subtitleMemory, subtitleDisplay),
-                    arrayOf(dataGeneral, dataChipset, dataMemory, dataDisplay),
+                    arrayOf(dataGeneral.await(), dataChipset.await(), dataMemory.await(), dataDisplay.await()),
                     emptyArray()
                 )
             }
-            binding.progressBarDevice.visibility = ViewGroup.INVISIBLE
+            binding.progressBar.visibility = ViewGroup.INVISIBLE
         }
     }
 
