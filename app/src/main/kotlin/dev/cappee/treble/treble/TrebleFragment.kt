@@ -1,4 +1,4 @@
-package dev.cappee.treble.fragment
+package dev.cappee.treble.treble
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,16 +9,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.cappee.treble.R
 import dev.cappee.treble.adapter.RecyclerViewAdapter
-import dev.cappee.treble.helper.TrebleHelper
-import kotlinx.android.synthetic.main.fragment_treble.*
+import dev.cappee.treble.databinding.FragmentTrebleBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TrebleFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View = inflater.inflate(R.layout.fragment_treble, container, false)
+    private var _binding: FragmentTrebleBinding? = null
+    private val binding get() = _binding!!
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentTrebleBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val titles: Array<Int> = arrayOf(R.string.project_treble, R.string.a_b_partitioning, R.string.system_as_root)
         val buttons: Array<Array<Int>> = arrayOf(arrayOf(R.string.project_treble, R.string.project_treble_description),
             arrayOf(R.string.a_b_partitioning, R.string.a_b_partitioning_description),
@@ -34,17 +39,22 @@ class TrebleFragment : Fragment() {
                 getString(TrebleHelper.seamlessUpdate()))
             val dataSystemAsRoot: Array<String> = arrayOf(getString(TrebleHelper.systemMount()),
                 getString(TrebleHelper.systemMountMethod()))
-            recyclerViewTreble.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            recyclerViewTreble.adapter = RecyclerViewAdapter(context,
-                titles,
-                arrayOf(subtitleProjectTreble, subtitleABPartitioning, subtitleSystemAsRoot),
-                arrayOf(dataProjectTreble, dataABPartitioning, dataSystemAsRoot),
-                buttons
-            )
-            progressBarTreble.visibility = ViewGroup.INVISIBLE
+            binding.recyclerViewTreble.apply {
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                adapter = RecyclerViewAdapter(context,
+                    titles,
+                    arrayOf(subtitleProjectTreble, subtitleABPartitioning, subtitleSystemAsRoot),
+                    arrayOf(dataProjectTreble, dataABPartitioning, dataSystemAsRoot),
+                    buttons
+                )
+            }
+            binding.progressBarTreble.visibility = ViewGroup.INVISIBLE
         }
+    }
 
-        return view
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

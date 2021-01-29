@@ -1,22 +1,20 @@
-package dev.cappee.treble.ui
+package dev.cappee.treble.main
 
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import dev.cappee.treble.R
 import dev.cappee.treble.adapter.ViewPagerAdapter
-import kotlinx.android.synthetic.main.activity_main.*
+import dev.cappee.treble.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+class MainActivity : AppCompatActivity() {
 
     private var glSurfaceView: GLSurfaceView? = null
     private val bundle = Bundle()
@@ -31,9 +29,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         override fun onDrawFrame(gl: GL10) {}
     }
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSupportActionBar(toolbar_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
         //Running GPU stuff
         lifecycleScope.launch(Dispatchers.Main) {
@@ -42,15 +44,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 setEGLConfigChooser(8, 8, 8, 8, 16, 0)
                 setRenderer(glRenderer)
             }
-            coordinator_main.addView(glSurfaceView)
+            binding.root.addView(glSurfaceView)
         }
 
+        binding.viewPager.adapter = ViewPagerAdapter(this, bundle)
 
-        val viewPager: ViewPager2 = findViewById(R.id.view_pager_main)
-        viewPager.adapter = ViewPagerAdapter(this, bundle)
-
-        val tabLayout: TabLayout = findViewById(R.id.tab_layout_main)
-        TabLayoutMediator(tabLayout, viewPager) { tab: TabLayout.Tab, position: Int ->
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab: TabLayout.Tab, position: Int ->
             when (position) {
                 0 -> tab.text = "Treble"
                 1 -> tab.text = "Root"

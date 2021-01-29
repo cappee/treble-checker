@@ -1,14 +1,13 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("android.extensions")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 }
 
 android {
     compileSdkVersion(30)
-    buildToolsVersion = "30.0.2"
+    buildToolsVersion = "30.0.3"
 
     defaultConfig {
         applicationId = "dev.cappee.treble"
@@ -17,6 +16,10 @@ android {
         versionCode(1)
         versionName = "1.0"
         testInstrumentationRunner("androidx.test.runner.AndroidJUnitRunner")
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     buildTypes {
@@ -37,8 +40,8 @@ android {
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.10")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.21")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
     implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0")
 

@@ -1,4 +1,4 @@
-package dev.cappee.treble.helper
+package dev.cappee.treble.device
 
 import android.app.ActivityManager
 import android.content.Context
@@ -8,7 +8,6 @@ import android.os.Build
 import android.os.Environment
 import android.os.StatFs
 import android.util.DisplayMetrics
-import android.view.Display
 import android.view.WindowManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dev.cappee.treble.R
@@ -142,8 +141,8 @@ object DeviceHelper {
     private val displayPoint: Point = Point()
 
     fun initDisplay(context: Context) {
-        context.display?.getRealSize(displayPoint)
         context.display?.getRealMetrics(displayMetrics)
+        context.display?.getRealSize(displayPoint)
     }
 
     //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)

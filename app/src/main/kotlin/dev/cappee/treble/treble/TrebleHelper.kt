@@ -1,4 +1,4 @@
-package dev.cappee.treble.helper
+package dev.cappee.treble.treble
 
 import android.content.Context
 import dev.cappee.treble.R
