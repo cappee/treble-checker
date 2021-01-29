@@ -17,6 +17,7 @@ import java.io.FileNotFoundException
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.math.pow
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 object DeviceHelper {
@@ -155,10 +156,21 @@ object DeviceHelper {
 
     //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
     fun displayResolution(): String {
+        val resolution = "${displayMetrics.heightPixels}x${displayMetrics.widthPixels}"
         return if (display.isHdr) {
-            "${displayMetrics.heightPixels} x ${displayMetrics.widthPixels} (HDR)"
+            when {
+                display.hdrCapabilities.supportedHdrTypes.contains(Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS) -> {
+                    "$resolution (HDR10+)"
+                }
+                display.hdrCapabilities.supportedHdrTypes.contains(Display.HdrCapabilities.HDR_TYPE_HDR10) -> {
+                    "$resolution (HDR10)"
+                }
+                else -> {
+                    "$resolution (HDR)"
+                }
+            }
         } else {
-            "${displayMetrics.heightPixels} x ${displayMetrics.widthPixels}"
+            resolution
         }
     }
 
@@ -168,8 +180,14 @@ object DeviceHelper {
     }
 
     //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-    fun displayRefreshRate(windowManager: WindowManager) : String {
-        return String.format("%.0f", windowManager.defaultDisplay.refreshRate) + " Hz"
+    fun displayRefreshRate() : String {
+        var refreshRate: Float = display.supportedModes[0].refreshRate
+        for (mode in display.supportedModes) {
+            if (mode.refreshRate > refreshRate) {
+                refreshRate = mode.refreshRate
+            }
+        }
+        return "${refreshRate.roundToInt()} Hz"
     }
 
     fun batteryCapacityExperimental(context: Context) : String {
