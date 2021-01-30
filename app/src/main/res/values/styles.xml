@@ -9,7 +9,7 @@
     </style>
 
     <style name="Widget.Toolbar" parent="Widget.MaterialComponents.Toolbar">
-        <item name="titleTextColor">?android:textColorPrimary</item>
+        <item name="titleTextColor">?android:textColorPrimaryInverse</item>
         <item name="android:background">?colorOnPrimary</item>
         <item name="contentInsetStart">0dp</item>
         <item name="android:layout_height">?actionBarSize</item>

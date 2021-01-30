@@ -63,4 +63,8 @@
     <string name="present">Presente</string>
     <string name="build_date">Data di complizione</string>
     <string name="not_found">Non trovato</string>
+    <string name="menu">Menu</string>
+    <string name="settings">Impostazioni</string>
+    <string name="about_us">Su di noi</string>
+    <string name="tools">Strumenti</string>
 </resources>
