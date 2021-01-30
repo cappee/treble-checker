@@ -16,6 +16,7 @@ import dev.cappee.treble.main.recycler.ItemDecoration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TrebleFragment : Fragment() {
 
@@ -35,31 +36,20 @@ class TrebleFragment : Fragment() {
         val subtitleProjectTreble: Array<Int> = arrayOf(R.string.status, R.string.treble_arch, R.string.vndk_version)
         val subtitleABPartitioning: Array<Int> = arrayOf(R.string.status, R.string.seamless_updates)
         val subtitleSystemAsRoot: Array<Int> = arrayOf(R.string.status, R.string.method)
-        lifecycleScope.launch(Dispatchers.Main) {
-            val dataProjectTreble = async(Dispatchers.Default) {
-                arrayOf(getString(TrebleHelper.trebleStatus()),
-                    getString(TrebleHelper.trebleVersion()),
-                    TrebleHelper.vndkVersion(requireContext()))
-            }
-            val dataABPartitioning = async(Dispatchers.Default) {
-                arrayOf(getString(TrebleHelper.partitionStatus()),
-                    getString(TrebleHelper.seamlessUpdate()))
-            }
-            val dataSystemAsRoot = async(Dispatchers.Default) {
-                arrayOf(getString(TrebleHelper.systemMount()),
-                    getString(TrebleHelper.systemMountMethod()))
-            }
-            binding.recyclerView.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                addItemDecoration(ItemDecoration(resources.getDimensionPixelSize(R.dimen.recycler_items_margin)))
+        val treble: Treble = arguments?.getParcelable("info")!!
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(ItemDecoration(resources.getDimensionPixelSize(R.dimen.recycler_items_margin)))
+            lifecycleScope.launch { withContext(Dispatchers.Default) {
                 adapter = RecyclerViewAdapter(context,
                     titles,
                     arrayOf(subtitleProjectTreble, subtitleABPartitioning, subtitleSystemAsRoot),
-                    arrayOf(dataProjectTreble.await(), dataABPartitioning.await(), dataSystemAsRoot.await()),
-                    buttons
-                )
-            }
-            binding.progressBar.visibility = ViewGroup.INVISIBLE
+                    arrayOf(
+                        arrayOf(treble.trebleStatus, treble.trebleArch, treble.vndkVersion),
+                        arrayOf(treble.abStatus, treble.seamlessUpdate),
+                        arrayOf(treble.sarStatus, treble.sarMethod)),
+                    buttons)
+            } }
         }
     }
 

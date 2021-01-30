@@ -14,6 +14,7 @@ import dev.cappee.treble.main.recycler.ItemDecoration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RootFragment : Fragment() {
 
@@ -31,25 +32,19 @@ class RootFragment : Fragment() {
         val buttonBusyBox: Array<Int> = arrayOf(R.string.busybox, R.string.busybox_description)
         val subtitlesSuperuser: Array<Int> = arrayOf(R.string.root_permissions, R.string.root_path)
         val subtitleBusyBox: Array<Int> = arrayOf(R.string.status, R.string.build_date)
-        lifecycleScope.launch(Dispatchers.Main) {
-            val dataSuperuser = async(Dispatchers.Default) {
-                arrayOf(getString(RootHelper.rootPermissions()),
-                    RootHelper.rootPath(context!!))
-            }
-            val dataBusyBox = async(Dispatchers.Default) {
-                arrayOf(RootHelper.busyBoxInstalled(context!!),
-                    RootHelper.busyBoxBuildDate(context!!))
-            }
-            binding.recyclerView.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                addItemDecoration(ItemDecoration(resources.getDimensionPixelSize(R.dimen.recycler_items_margin)))
+        val root: Root = arguments?.getParcelable("info")!!
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(ItemDecoration(resources.getDimensionPixelSize(R.dimen.recycler_items_margin)))
+            lifecycleScope.launch { withContext(Dispatchers.Default) {
                 adapter = RecyclerViewAdapter(context,
                     titles,
                     arrayOf(subtitlesSuperuser, subtitleBusyBox),
-                    arrayOf(dataSuperuser.await(), dataBusyBox.await()),
+                    arrayOf(
+                        arrayOf(root.rootPermissions, root.rootPath),
+                        arrayOf(root.busyBoxStatus, root.busyBoxBuildDate)),
                     arrayOf(buttonSuperuser, buttonBusyBox))
-            }
-            binding.progressBar.visibility = ViewGroup.INVISIBLE
+            } }
         }
     }
 

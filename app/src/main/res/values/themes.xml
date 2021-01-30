@@ -13,5 +13,4 @@
         <!--Theme customization-->
         <item name="colorControlActivated">?colorPrimary</item>
     </style>
-
 </resources>

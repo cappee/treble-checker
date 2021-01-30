@@ -2,10 +2,22 @@ package dev.cappee.treble.root
 
 import android.content.Context
 import dev.cappee.treble.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import java.io.BufferedReader
 import java.io.File
 
 object RootHelper {
+
+    suspend fun get(context: Context) = coroutineScope {
+        async(Dispatchers.Default) { Root(
+            rootPermissions(context),
+            rootPath(context),
+            busyBoxInstalled(context),
+            busyBoxBuildDate(context)
+        ) }
+    }.await()
 
     /*
      Hey you who are reading this code, update this array if you think that some are missing
@@ -21,13 +33,14 @@ object RootHelper {
         "/data/local/"
     )
 
-    fun rootPermissions() : Int {
+    fun rootPermissions(context: Context) : String {
+        println("THREAD ROOT: ${Thread.currentThread()}")
         for (path in possiblePath) {
             if (File(path + "su").exists()) {
-                return R.string.available
+                return context.getString(R.string.available)
             }
         }
-        return R.string.not_available
+        return context.getString(R.string.not_available)
     }
 
     fun rootPath(context: Context) : String {

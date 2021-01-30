@@ -3,32 +3,48 @@ package dev.cappee.treble.treble
 import android.content.Context
 import dev.cappee.treble.R
 import dev.cappee.treble.model.Mount
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 
 object TrebleHelper {
 
-    fun trebleStatus() : Int {
+    suspend fun get(context: Context) = coroutineScope {
+        async(Dispatchers.IO) { Treble(
+            trebleStatus(context),
+            trebleVersion(context),
+            vndkVersion(context),
+            partitionStatus(context),
+            seamlessUpdate(context),
+            systemMount(context),
+            systemMountMethod(context)
+        ) }
+    }.await()
+
+    fun trebleStatus(context: Context) : String {
+        println("THREAD TREBLE: ${Thread.currentThread()}")
         val processTreble = Runtime.getRuntime().exec("getprop ro.treble.enabled")
         var treble: String = processTreble.inputStream.bufferedReader().use(BufferedReader::readText)
         if (treble.isNotBlank())
             treble = treble.substring(0, treble.length - 1)
         return if (treble == "true") {
-            R.string.compatible
+            context.getString(R.string.compatible)
         } else if (treble == "false" && (File("/vendor/etc/vintf/manifest.xml").exists() || File("/vendor/manifest.xml").exists())) {
-            R.string.compatible_but_hidden
+            context.getString(R.string.compatible_but_hidden)
         } else {
-            R.string.not_compatible
+            context.getString(R.string.not_compatible)
         }
     }
 
     //Ported and adapted from treble (https://github.com/kevintresuelo/treble)
-    fun trebleVersion() : Int {
+    fun trebleVersion(context: Context) : String {
         return when {
-            File("/vendor/etc/vintf/manifest.xml").exists() -> R.string.latest_typology
-            File("/vendor/manifest.xml").exists() -> R.string.legacy
-            else -> R.string.not_supported
+            File("/vendor/etc/vintf/manifest.xml").exists() -> context.getString(R.string.latest_typology)
+            File("/vendor/manifest.xml").exists() -> context.getString(R.string.legacy)
+            else -> context.getString(R.string.not_supported)
         }
     }
 
@@ -47,7 +63,7 @@ object TrebleHelper {
     }
 
     //Ported and adapted from treble (https://github.com/kevintresuelo/treble)
-    fun partitionStatus() : Int {
+    fun partitionStatus(context: Context) : String {
         val processVirtualABEnabled = Runtime.getRuntime().exec("getprop ro.virtual_ab.enabled").inputStream.bufferedReader().use(BufferedReader::readText)
         val processVirtualABRetrofit = Runtime.getRuntime().exec("getprop ro.virtual_ab.retrofit").inputStream.bufferedReader().use(BufferedReader::readText)
         val processBootSlotSuffix = Runtime.getRuntime().exec("getprop ro.boot.slot_suffix").inputStream.bufferedReader().use(BufferedReader::readText)
@@ -59,19 +75,19 @@ object TrebleHelper {
         val buildABEnabled = processBootSlotSuffix.substring(0, processBuildABEnabled.length - 1)
 
         if (virtualABEnabled == "true" && virtualABRetrofit == "false") {
-            return R.string.virtual_a_b_partitioning
+            return context.getString(R.string.virtual_a_b_partitioning)
         }
         if (bootSlotSuffix.isNotEmpty() || buildABEnabled == "true") {
-            return R.string.legacy_a_b_partitioning
+            return context.getString(R.string.legacy_a_b_partitioning)
         }
-        return R.string.not_supported
+        return context.getString(R.string.not_supported)
     }
 
-    fun seamlessUpdate() : Int {
-        return when (partitionStatus()) {
-            R.string.virtual_a_b_partitioning -> R.string.supported
-            R.string.legacy_a_b_partitioning -> R.string.supported
-            else -> R.string.not_supported
+    fun seamlessUpdate(context: Context) : String {
+        return when (partitionStatus(context)) {
+            context.getString(R.string.virtual_a_b_partitioning) -> context.getString(R.string.supported)
+            context.getString(R.string.legacy_a_b_partitioning) -> context.getString(R.string.supported)
+            else -> context.getString(R.string.not_supported)
         }
     }
 
@@ -93,28 +109,28 @@ object TrebleHelper {
     }
 
     //Ported and adapted from treble (https://github.com/kevintresuelo/treble)
-    fun systemMount() : Int {
+    fun systemMount(context: Context) : String {
         val mountsPoints = mountPoints()
         val systemOnBlock = mountsPoints.none { it.device != "none" && it.mountPoint == "/system" && it.fileSystem != "tmpfs"}
         val deviceMountedOnRoot = mountsPoints.any { it.device == "/dev/root" && it.mountPoint == "/" }
         val systemOnRoot = mountsPoints.any { it.mountPoint == "/system_root" && it.fileSystem != "tmpfs" }
         return if (systemOnBlock || deviceMountedOnRoot || systemOnRoot) {
-            R.string.supported
+            context.getString(R.string.supported)
         } else {
-            R.string.not_supported
+            context.getString(R.string.not_supported)
         }
     }
 
-    fun systemMountMethod() : Int {
+    fun systemMountMethod(context: Context) : String {
         val mountsPoints = mountPoints()
         val systemOnBlock = mountsPoints.none { it.device != "none" && it.mountPoint == "/system" && it.fileSystem != "tmpfs"}
         val deviceMountedOnRoot = mountsPoints.any { it.device == "/dev/root" && it.mountPoint == "/" }
         val systemOnRoot = mountsPoints.any { it.mountPoint == "/system_root" && it.fileSystem != "tmpfs" }
         return when {
-            systemOnRoot -> { R.string.mounted_like_system_as_root }
-            deviceMountedOnRoot -> { R.string.mounted_like_device_as_root }
-            systemOnBlock -> { R.string.mounted_like_system_on_block }
-            else -> { R.string.not_supported }
+            systemOnRoot -> { context.getString(R.string.mounted_like_system_as_root) }
+            deviceMountedOnRoot -> { context.getString(R.string.mounted_like_device_as_root) }
+            systemOnBlock -> { context.getString(R.string.mounted_like_system_on_block) }
+            else -> { context.getString(R.string.not_supported) }
         }
     }
 

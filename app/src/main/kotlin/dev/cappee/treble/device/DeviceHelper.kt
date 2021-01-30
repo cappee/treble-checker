@@ -12,6 +12,9 @@ import android.view.Display
 import android.view.WindowManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dev.cappee.treble.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
@@ -22,7 +25,26 @@ import kotlin.math.sqrt
 
 object DeviceHelper {
 
-    fun identification() : String {
+    suspend fun get(context: Context, gpu: String) = coroutineScope {
+        initDisplay(context, context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+        async(Dispatchers.Default) { Device(
+            identifier(),
+            batteryCapacityExperimental(context),
+            cpu(),
+            gpu,
+            cpuArch(),
+            totalRam(context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager),
+            internalStorage(context),
+            externalStorage(context),
+            displaySize(),
+            displayResolution(),
+            displayDPI(),
+            displayRefreshRate()
+        ) }
+    }.await()
+
+    private fun identifier() : String {
+        println("THREAD DEVICE: ${Thread.currentThread()}")
         return Build.MANUFACTURER + " " + Build.DEVICE + " (" + Build.MODEL + ")"
     }
 
@@ -37,7 +59,7 @@ object DeviceHelper {
     }
 
     //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-    fun cpu() : String {
+    private fun cpu() : String {
         val map: MutableMap<String, String> = HashMap()
         try {
             val scanner = Scanner(File("/proc/cpuinfo"))
@@ -56,7 +78,7 @@ object DeviceHelper {
     }
 
     @Suppress("DEPRECATION")
-    fun cpuArch() : String {
+    private fun cpuArch() : String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Build.SUPPORTED_ABIS[0]
         } else {
@@ -65,7 +87,7 @@ object DeviceHelper {
     }
 
     //Ported (and simplified) from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-    fun totalRam(activityManager: ActivityManager) : String {
+    private fun totalRam(activityManager: ActivityManager) : String {
         val memoryInfo = ActivityManager.MemoryInfo()
         activityManager.getMemoryInfo(memoryInfo)
         val ram = memoryInfo.totalMem
@@ -76,7 +98,7 @@ object DeviceHelper {
         }
     }
 
-    fun internalStorage(context: Context) : String {
+    private fun internalStorage(context: Context) : String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             val root = Environment.getRootDirectory()
             val data = Environment.getDataDirectory()
@@ -88,7 +110,7 @@ object DeviceHelper {
     }
 
     @Suppress("DEPRECATION")
-    fun externalStorage(context: Context) : String {
+    private fun externalStorage(context: Context) : String {
         if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED || Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED_READ_ONLY) {
             when {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
@@ -135,7 +157,7 @@ object DeviceHelper {
     private val displayPoint: Point = Point()
 
     @Suppress("DEPRECATION")
-    fun initDisplay(context: Context, windowManager: WindowManager) {
+    private fun initDisplay(context: Context, windowManager: WindowManager) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             display = context.display ?: windowManager.defaultDisplay
             context.display?.getRealMetrics(displayMetrics)
@@ -148,14 +170,14 @@ object DeviceHelper {
     }
 
     //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-    fun displaySize() : String {
+    private fun displaySize() : String {
         val x = (displayPoint.x / displayMetrics.xdpi).toDouble().pow(2.0)
         val y = (displayPoint.y / displayMetrics.ydpi).toDouble().pow(2.0)
         return String.format("%.1f", sqrt(x + y)) + "\""
     }
 
     //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-    fun displayResolution(): String {
+    private fun displayResolution(): String {
         val resolution = "${displayMetrics.heightPixels}x${displayMetrics.widthPixels}"
         return if (display.isHdr) {
             when {
@@ -175,12 +197,12 @@ object DeviceHelper {
     }
 
     //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-    fun displayDPI(): String {
+    private fun displayDPI(): String {
         return displayMetrics.densityDpi.toString()
     }
 
     //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
-    fun displayRefreshRate() : String {
+    private fun displayRefreshRate() : String {
         var refreshRate: Float = display.supportedModes[0].refreshRate
         for (mode in display.supportedModes) {
             if (mode.refreshRate > refreshRate) {
@@ -190,7 +212,7 @@ object DeviceHelper {
         return "${refreshRate.roundToInt()} Hz"
     }
 
-    fun batteryCapacityExperimental(context: Context) : String {
+    private fun batteryCapacityExperimental(context: Context) : String {
         val powerProfile: Any?
         try {
             powerProfile = Class.forName("com.android.internal.os.PowerProfile")
