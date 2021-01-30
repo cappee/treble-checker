@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.cappee.treble.R
 import dev.cappee.treble.main.recycler.RecyclerViewAdapter

@@ -1,19 +1,17 @@
-<resources>
-
-    <style name="MaterialComponents.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.TrebleChecker" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">?colorPrimary</item>
         <item name="colorAccent">?colorPrimary</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <!--Status bar color-->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorOnPrimary</item>
+        <!--Dialogs third-party library settings-->
         <item name="md_font_title">@font/product_sans_medium</item>
-        <item name="md_corner_radius">10dp</item>
-    </style>
-
-    <style name="MaterialComponents.Dark" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">?colorPrimary</item>
-        <item name="md_font_title">@font/product_sans_medium</item>
-        <item name="md_corner_radius">10dp</item>
+        <item name="md_corner_radius">16dp</item>
+        <!--Theme customization-->
+        <item name="colorControlActivated">?colorPrimary</item>
     </style>
 
 </resources>
