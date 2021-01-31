@@ -58,20 +58,20 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.Main) {
             println("THREAD MAIN: ${Thread.currentThread()}")
             //Running GPU stuff
-            withContext(Dispatchers.Main) {
+            /*withContext(Dispatchers.Main) {
                 glSurfaceView = GLSurfaceView(this@MainActivity)
                 glSurfaceView?.apply {
                     setEGLConfigChooser(8, 8, 8, 8, 16, 0)
                     setRenderer(glRenderer)
                 }
             }
-            binding.root.addView(glSurfaceView)
+            binding.root.addView(glSurfaceView)*/
 
             //Get info from helper class
             withContext(Dispatchers.Default) {
                 trebleBundle.putParcelable("info", TrebleHelper.get(this@MainActivity))
                 rootBundle.putParcelable("info", RootHelper.get(this@MainActivity))
-                deviceBundle.putParcelable("info", DeviceHelper.get(this@MainActivity, glGpu))
+                deviceBundle.putParcelable("info", DeviceHelper.get(this@MainActivity, "glGpu"))
             }
 
             //Init ViewPager
