@@ -24,7 +24,7 @@ object TrebleHelper {
         ) }
     }.await()
 
-    fun trebleStatus(context: Context) : String {
+    private fun trebleStatus(context: Context) : String {
         println("THREAD TREBLE: ${Thread.currentThread()}")
         val processTreble = Runtime.getRuntime().exec("getprop ro.treble.enabled")
         var treble: String = processTreble.inputStream.bufferedReader().use(BufferedReader::readText)
@@ -40,7 +40,7 @@ object TrebleHelper {
     }
 
     //Ported and adapted from treble (https://github.com/kevintresuelo/treble)
-    fun trebleVersion(context: Context) : String {
+    private fun trebleVersion(context: Context) : String {
         return when {
             File("/vendor/etc/vintf/manifest.xml").exists() -> context.getString(R.string.latest_typology)
             File("/vendor/manifest.xml").exists() -> context.getString(R.string.legacy)
@@ -49,7 +49,7 @@ object TrebleHelper {
     }
 
     //Ported and adapted from treble (https://github.com/kevintresuelo/treble)
-    fun vndkVersion(context: Context) : String {
+    private fun vndkVersion(context: Context) : String {
         val processLite = Runtime.getRuntime().exec("getprop ro.vndk.lite").inputStream.bufferedReader().use(BufferedReader::readLine)
         var vndkLite = ""
         if (processLite == "true")
@@ -63,7 +63,7 @@ object TrebleHelper {
     }
 
     //Ported and adapted from treble (https://github.com/kevintresuelo/treble)
-    fun partitionStatus(context: Context) : String {
+    private fun partitionStatus(context: Context) : String {
         val processVirtualABEnabled = Runtime.getRuntime().exec("getprop ro.virtual_ab.enabled").inputStream.bufferedReader().use(BufferedReader::readText)
         val processVirtualABRetrofit = Runtime.getRuntime().exec("getprop ro.virtual_ab.retrofit").inputStream.bufferedReader().use(BufferedReader::readText)
         val processBootSlotSuffix = Runtime.getRuntime().exec("getprop ro.boot.slot_suffix").inputStream.bufferedReader().use(BufferedReader::readText)
@@ -83,7 +83,7 @@ object TrebleHelper {
         return context.getString(R.string.not_supported)
     }
 
-    fun seamlessUpdate(context: Context) : String {
+    private fun seamlessUpdate(context: Context) : String {
         return when (partitionStatus(context)) {
             context.getString(R.string.virtual_a_b_partitioning) -> context.getString(R.string.supported)
             context.getString(R.string.legacy_a_b_partitioning) -> context.getString(R.string.supported)
@@ -109,7 +109,7 @@ object TrebleHelper {
     }
 
     //Ported and adapted from treble (https://github.com/kevintresuelo/treble)
-    fun systemMount(context: Context) : String {
+    private fun systemMount(context: Context) : String {
         val mountsPoints = mountPoints()
         val systemOnBlock = mountsPoints.none { it.device != "none" && it.mountPoint == "/system" && it.fileSystem != "tmpfs"}
         val deviceMountedOnRoot = mountsPoints.any { it.device == "/dev/root" && it.mountPoint == "/" }
@@ -121,7 +121,7 @@ object TrebleHelper {
         }
     }
 
-    fun systemMountMethod(context: Context) : String {
+    private fun systemMountMethod(context: Context) : String {
         val mountsPoints = mountPoints()
         val systemOnBlock = mountsPoints.none { it.device != "none" && it.mountPoint == "/system" && it.fileSystem != "tmpfs"}
         val deviceMountedOnRoot = mountsPoints.any { it.device == "/dev/root" && it.mountPoint == "/" }

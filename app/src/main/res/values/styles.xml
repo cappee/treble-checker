@@ -27,7 +27,7 @@
     <style name="Widget.Card.Elevated" parent="Widget.MaterialComponents.CardView">
         <item name="cardBackgroundColor">@color/background</item>
         <item name="cardCornerRadius">16dp</item>
-        <item name="cardMaxElevation">8dp</item>
+        <item name="cardElevation">2dp</item>
         <item name="cardPreventCornerOverlap">true</item>
     </style>
 </resources>

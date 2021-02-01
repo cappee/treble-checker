@@ -23,6 +23,16 @@ class TrebleFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
+    companion object {
+        private const val DATA = "DATA"
+
+        fun newInstance(treble: Treble) = TrebleFragment().apply {
+            val bundle = Bundle()
+            bundle.putParcelable(DATA, treble)
+            arguments = bundle
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
@@ -36,20 +46,18 @@ class TrebleFragment : Fragment() {
         val subtitleProjectTreble: Array<Int> = arrayOf(R.string.status, R.string.treble_arch, R.string.vndk_version)
         val subtitleABPartitioning: Array<Int> = arrayOf(R.string.status, R.string.seamless_updates)
         val subtitleSystemAsRoot: Array<Int> = arrayOf(R.string.status, R.string.method)
-        val treble: Treble = arguments?.getParcelable("info")!!
+        val treble: Treble = arguments?.getParcelable(DATA)!!
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             addItemDecoration(ItemDecoration(resources.getDimensionPixelSize(R.dimen.recycler_items_margin)))
-            lifecycleScope.launch { withContext(Dispatchers.Default) {
-                adapter = RecyclerViewAdapter(context,
-                    titles,
-                    arrayOf(subtitleProjectTreble, subtitleABPartitioning, subtitleSystemAsRoot),
-                    arrayOf(
-                        arrayOf(treble.trebleStatus, treble.trebleArch, treble.vndkVersion),
-                        arrayOf(treble.abStatus, treble.seamlessUpdate),
-                        arrayOf(treble.sarStatus, treble.sarMethod)),
-                    buttons)
-            } }
+            adapter = RecyclerViewAdapter(context,
+                titles,
+                arrayOf(subtitleProjectTreble, subtitleABPartitioning, subtitleSystemAsRoot),
+                arrayOf(
+                    arrayOf(treble.trebleStatus, treble.trebleArch, treble.vndkVersion),
+                    arrayOf(treble.abStatus, treble.seamlessUpdate),
+                    arrayOf(treble.sarStatus, treble.sarMethod)),
+                buttons)
         }
     }
 

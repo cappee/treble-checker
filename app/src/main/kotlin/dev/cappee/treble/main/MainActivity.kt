@@ -22,6 +22,7 @@ import dev.cappee.treble.root.Root
 import dev.cappee.treble.root.RootHelper
 import dev.cappee.treble.treble.TrebleHelper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.microedition.khronos.egl.EGLConfig
@@ -33,18 +34,8 @@ class MainActivity : AppCompatActivity() {
     private val rootBundle = Bundle()
     private val deviceBundle = Bundle()
 
-    private var glSurfaceView: GLSurfaceView? = null
     private var glGpu = ""
-    private val glRenderer = object : GLSurfaceView.Renderer {
-        override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-            glGpu = gl?.glGetString(GL10.GL_VENDOR) + " " + gl?.glGetString(GL10.GL_RENDERER)
-            runOnUiThread {
-                glSurfaceView?.visibility = View.GONE
-            }
-        }
-        override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {}
-        override fun onDrawFrame(gl: GL10) {}
-    }
+
     private lateinit var menuDialog: MaterialDialog
 
     private lateinit var binding: ActivityMainBinding
@@ -56,27 +47,29 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         lifecycleScope.launch(Dispatchers.Main) {
-            println("THREAD MAIN: ${Thread.currentThread()}")
             //Running GPU stuff
-            /*withContext(Dispatchers.Main) {
-                glSurfaceView = GLSurfaceView(this@MainActivity)
-                glSurfaceView?.apply {
-                    setEGLConfigChooser(8, 8, 8, 8, 16, 0)
-                    setRenderer(glRenderer)
-                }
+            val glSurfaceView = GLSurfaceView(this@MainActivity)
+            glSurfaceView.apply {
+                setEGLConfigChooser(8, 8, 8, 8, 16, 0)
+                setRenderer(object : GLSurfaceView.Renderer {
+                    override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
+                        glGpu = "${gl?.glGetString(GL10.GL_VENDOR)} ${gl?.glGetString(GL10.GL_RENDERER)}"
+                        runOnUiThread {
+                            binding.root.removeView(glSurfaceView)
+                        }
+                    }
+                    override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {}
+                    override fun onDrawFrame(gl: GL10) {}
+                })
             }
-            binding.root.addView(glSurfaceView)*/
-
-            //Get info from helper class
-            withContext(Dispatchers.Default) {
-                trebleBundle.putParcelable("info", TrebleHelper.get(this@MainActivity))
-                rootBundle.putParcelable("info", RootHelper.get(this@MainActivity))
-                deviceBundle.putParcelable("info", DeviceHelper.get(this@MainActivity, "glGpu"))
-            }
+            binding.root.addView(glSurfaceView)
 
             //Init ViewPager
             binding.viewPager.adapter = withContext(Dispatchers.Default) {
-                ViewPagerAdapter(this@MainActivity, trebleBundle, rootBundle, deviceBundle)
+                ViewPagerAdapter(this@MainActivity,
+                    TrebleHelper.get(this@MainActivity),
+                    RootHelper.get(this@MainActivity),
+                    DeviceHelper.get(this@MainActivity, glGpu))
             }
 
             //Init TabLayout
@@ -91,7 +84,6 @@ class MainActivity : AppCompatActivity() {
             //Hide progressbar
             binding.progressBar.visibility = View.INVISIBLE
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -131,20 +123,11 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu -> {
+                if (::menuDialog.isInitialized)
                 menuDialog.show()
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        glSurfaceView?.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        glSurfaceView?.onPause()
     }
 
 }

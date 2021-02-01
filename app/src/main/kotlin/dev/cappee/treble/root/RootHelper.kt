@@ -33,7 +33,7 @@ object RootHelper {
         "/data/local/"
     )
 
-    fun rootPermissions(context: Context) : String {
+    private fun rootPermissions(context: Context) : String {
         println("THREAD ROOT: ${Thread.currentThread()}")
         for (path in possiblePath) {
             if (File(path + "su").exists()) {
@@ -43,7 +43,7 @@ object RootHelper {
         return context.getString(R.string.not_available)
     }
 
-    fun rootPath(context: Context) : String {
+    private fun rootPath(context: Context) : String {
         for (path in possiblePath) {
             if (File(path + "su").exists()) {
                 return path + "su"
@@ -52,7 +52,7 @@ object RootHelper {
         return context.getString(R.string.no_root_path_found)
     }
 
-    fun busyBoxInstalled(context: Context) : String {
+    private fun busyBoxInstalled(context: Context) : String {
         return try {
             val line = Runtime.getRuntime().exec("busybox").inputStream.bufferedReader().use(BufferedReader::readLine)
             val version = line.split("\\s+".toRegex()).toTypedArray()[1]
@@ -62,7 +62,7 @@ object RootHelper {
         }
     }
 
-    fun busyBoxBuildDate(context: Context) : String {
+    private fun busyBoxBuildDate(context: Context) : String {
         return try {
             val line = Runtime.getRuntime().exec("busybox").inputStream.bufferedReader().use(BufferedReader::readLine)
             val date = line.substringAfter("(", "")

@@ -11,6 +11,8 @@ import dev.cappee.treble.R
 import dev.cappee.treble.main.recycler.RecyclerViewAdapter
 import dev.cappee.treble.databinding.FragmentMainBinding
 import dev.cappee.treble.main.recycler.ItemDecoration
+import dev.cappee.treble.treble.Treble
+import dev.cappee.treble.treble.TrebleFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,6 +21,16 @@ class DeviceFragment : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
+
+    companion object {
+        private const val DATA = "DATA"
+
+        fun newInstance(device: Device) = DeviceFragment().apply {
+            val bundle = Bundle()
+            bundle.putParcelable(DATA, device)
+            arguments = bundle
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
@@ -31,21 +43,19 @@ class DeviceFragment : Fragment() {
         val subtitleChipset: Array<Int> = arrayOf(R.string.processor, R.string.graphic_card, R.string.architecture)
         val subtitleMemory: Array<Int> = arrayOf(R.string.ram, R.string.intenal_memory, R.string.external_memory)
         val subtitleDisplay: Array<Int> = arrayOf(R.string.dimensions, R.string.display_resolution, R.string.dpi, R.string.refresh_rate)
-        val device: Device = arguments?.getParcelable("info")!!
+        val device: Device = arguments?.getParcelable(DATA)!!
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             addItemDecoration(ItemDecoration(resources.getDimensionPixelSize(R.dimen.recycler_items_margin)))
-            lifecycleScope.launch { withContext(Dispatchers.Default) {
-                adapter = RecyclerViewAdapter(context,
-                    titles,
-                    arrayOf(subtitleGeneral, subtitleChipset, subtitleMemory, subtitleDisplay),
-                    arrayOf(
-                        arrayOf(device.identifier, device.battery),
-                        arrayOf(device.cpu, device.gpu, device.arch),
-                        arrayOf(device.ram, device.internalMemory, device.externalMemory),
-                        arrayOf(device.screenSize, device.screenResolution, device.dpi, device.refreshRate)),
-                    emptyArray())
-            } }
+            adapter = RecyclerViewAdapter(context,
+                titles,
+                arrayOf(subtitleGeneral, subtitleChipset, subtitleMemory, subtitleDisplay),
+                arrayOf(
+                    arrayOf(device.identifier, device.battery),
+                    arrayOf(device.cpu, device.gpu, device.arch),
+                    arrayOf(device.ram, device.internalMemory, device.externalMemory),
+                    arrayOf(device.screenSize, device.screenResolution, device.dpi, device.refreshRate)),
+                emptyArray())
         }
     }
 
