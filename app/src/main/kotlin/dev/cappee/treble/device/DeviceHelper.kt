@@ -25,7 +25,7 @@ import kotlin.math.sqrt
 
 object DeviceHelper {
 
-    suspend fun get(context: Context, gpu: String) = coroutineScope {
+    suspend fun get(context: Context) = coroutineScope {
         initDisplay(context, context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
         async(Dispatchers.Default) { Device(
             identifier(),
@@ -58,7 +58,7 @@ object DeviceHelper {
         return context.getString(R.string.api_21_required)
     }
 
-    //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
+    //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
     private fun cpu() : String {
         val map: MutableMap<String, String> = HashMap()
         try {
@@ -86,7 +86,9 @@ object DeviceHelper {
         }
     }
 
-    //Ported (and simplified) from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
+    lateinit var gpu: String
+
+    //Ported (and simplified) from DroidInfo (https://github.com/cappee/DroidInfo)
     private fun totalRam(activityManager: ActivityManager) : String {
         val memoryInfo = ActivityManager.MemoryInfo()
         activityManager.getMemoryInfo(memoryInfo)
@@ -169,14 +171,14 @@ object DeviceHelper {
         }
     }
 
-    //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
+    //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
     private fun displaySize() : String {
         val x = (displayPoint.x / displayMetrics.xdpi).toDouble().pow(2.0)
         val y = (displayPoint.y / displayMetrics.ydpi).toDouble().pow(2.0)
         return String.format("%.1f", sqrt(x + y)) + "\""
     }
 
-    //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
+    //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
     private fun displayResolution(): String {
         val resolution = "${displayMetrics.heightPixels}x${displayMetrics.widthPixels}"
         return if (display.isHdr) {
@@ -196,12 +198,12 @@ object DeviceHelper {
         }
     }
 
-    //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
+    //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
     private fun displayDPI(): String {
         return displayMetrics.densityDpi.toString()
     }
 
-    //Ported method from DroidInfo (https://github.com/gabrielecappellaro/DroidInfo)
+    //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
     private fun displayRefreshRate() : String {
         var refreshRate: Float = display.supportedModes[0].refreshRate
         for (mode in display.supportedModes) {

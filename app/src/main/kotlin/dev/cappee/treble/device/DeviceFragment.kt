@@ -5,17 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.cappee.treble.R
 import dev.cappee.treble.main.recycler.RecyclerViewAdapter
 import dev.cappee.treble.databinding.FragmentMainBinding
 import dev.cappee.treble.main.recycler.ItemDecoration
-import dev.cappee.treble.treble.Treble
-import dev.cappee.treble.treble.TrebleFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class DeviceFragment : Fragment() {
 
@@ -38,18 +32,19 @@ class DeviceFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val titles: Array<Int> = arrayOf(R.string.general, R.string.chipset, R.string.memory, R.string.display)
-        val subtitleGeneral: Array<Int> = arrayOf(R.string.identification, R.string.battery)
-        val subtitleChipset: Array<Int> = arrayOf(R.string.processor, R.string.graphic_card, R.string.architecture)
-        val subtitleMemory: Array<Int> = arrayOf(R.string.ram, R.string.intenal_memory, R.string.external_memory)
-        val subtitleDisplay: Array<Int> = arrayOf(R.string.dimensions, R.string.display_resolution, R.string.dpi, R.string.refresh_rate)
+        //Get main object from bundle
         val device: Device = arguments?.getParcelable(DATA)!!
+        //Init RecyclerView
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             addItemDecoration(ItemDecoration(resources.getDimensionPixelSize(R.dimen.recycler_items_margin)))
             adapter = RecyclerViewAdapter(context,
-                titles,
-                arrayOf(subtitleGeneral, subtitleChipset, subtitleMemory, subtitleDisplay),
+                arrayOf(R.string.general, R.string.chipset, R.string.memory, R.string.display),
+                arrayOf(
+                    arrayOf(R.string.identification, R.string.battery),
+                    arrayOf(R.string.processor, R.string.graphic_card, R.string.architecture),
+                    arrayOf(R.string.ram, R.string.intenal_memory, R.string.external_memory),
+                    arrayOf(R.string.dimensions, R.string.display_resolution, R.string.dpi, R.string.refresh_rate)),
                 arrayOf(
                     arrayOf(device.identifier, device.battery),
                     arrayOf(device.cpu, device.gpu, device.arch),

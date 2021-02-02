@@ -10,7 +10,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import dev.cappee.treble.R
 
-class RecyclerViewAdapter(private val context: Context?, private val titles: Array<Int>, private val allSubtitles: Array<Array<Int>>, private val allData: Array<Array<String>>, private val allButtons: Array<Array<Int>>?) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+class RecyclerViewAdapter(private val context: Context?, private val titles: Array<Int>, private val allSubtitles: Array<Array<Int>>, private val allData: Array<Array<String>>, private val allButtons: Array<Pair<Int, Int>>?) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: MaterialTextView = itemView.findViewById(R.id.textViewPlaceholderTitle)
@@ -30,16 +30,10 @@ class RecyclerViewAdapter(private val context: Context?, private val titles: Arr
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        /*if (position == itemCount - 1) {
-            val params: ViewGroup.MarginLayoutParams = holder.card.layoutParams as ViewGroup.MarginLayoutParams
-            params.bottomMargin = params.topMargin
-        }*/
         holder.title.text = context?.getString(titles[position])
         val subtitles : Array<Int> = allSubtitles[position]
         val data : Array<String> = allData[position]
-        var buttons: Array<Int> = emptyArray()
-        if (!allButtons.isNullOrEmpty())
-            buttons = allButtons[position]
+
         when (subtitles.size) {
             4 -> {
                 holder.subtitleFirst.text = context?.getString(subtitles[0])
@@ -82,17 +76,18 @@ class RecyclerViewAdapter(private val context: Context?, private val titles: Arr
                 holder.first.text = data[0]
             }
         }
-        if (buttons.isNullOrEmpty()) {
-            holder.button.visibility = MaterialButton.GONE
-        } else {
+        if (!allButtons.isNullOrEmpty()) {
+            val buttons = allButtons[position]
             holder.button.setOnClickListener {
                 if (context != null) {
                     MaterialDialog(context, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
-                        title(buttons[0])
-                        message(buttons[1])
+                        title(buttons.first)
+                        message(buttons.second)
                     }
                 }
             }
+        } else {
+            holder.button.visibility = MaterialButton.GONE
         }
     }
 
