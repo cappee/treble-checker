@@ -12,58 +12,70 @@ import java.io.FileReader
 
 object TrebleHelper {
 
-    suspend fun get(context: Context) = coroutineScope {
-        async(Dispatchers.IO) { Treble(
-            trebleStatus(context),
-            trebleVersion(context),
-            vndkVersion(context),
-            partitionStatus(context),
-            seamlessUpdate(context),
-            systemMount(context),
-            systemMountMethod(context)
+    suspend fun get() = coroutineScope {
+        async(Dispatchers.Default) { Treble(
+            trebleStatus(),
+            trebleVersion(),
+            vndkVersion(),
+            partitionStatus(),
+            seamlessUpdate(),
+            systemMount(),
+            systemMountMethod()
         ) }
     }.await()
 
-    private fun trebleStatus(context: Context) : String {
+    fun init(context: Context) {
+        applicationContext = context.applicationContext
+    }
+
+    private lateinit var applicationContext: Context
+
+    private fun trebleStatus() : String {
         println("THREAD TREBLE: ${Thread.currentThread()}")
         val processTreble = Runtime.getRuntime().exec("getprop ro.treble.enabled")
         var treble: String = processTreble.inputStream.bufferedReader().use(BufferedReader::readText)
         if (treble.isNotBlank())
             treble = treble.substring(0, treble.length - 1)
         return if (treble == "true") {
-            context.getString(R.string.compatible)
+            applicationContext.getString(R.string.compatible)
         } else if (treble == "false" && (File("/vendor/etc/vintf/manifest.xml").exists() || File("/vendor/manifest.xml").exists())) {
-            context.getString(R.string.compatible_but_hidden)
+            applicationContext.getString(R.string.compatible_but_hidden)
         } else {
-            context.getString(R.string.not_compatible)
+            applicationContext.getString(R.string.not_compatible)
         }
     }
 
     //Ported and adapted from treble (https://github.com/kevintresuelo/treble)
-    private fun trebleVersion(context: Context) : String {
+    private fun trebleVersion() : String {
         return when {
-            File("/vendor/etc/vintf/manifest.xml").exists() -> context.getString(R.string.latest_typology)
-            File("/vendor/manifest.xml").exists() -> context.getString(R.string.legacy)
-            else -> context.getString(R.string.not_supported)
+            File("/vendor/etc/vintf/manifest.xml").exists() -> applicationContext.getString(R.string.latest_typology)
+            File("/vendor/manifest.xml").exists() -> applicationContext.getString(R.string.legacy)
+            else -> applicationContext.getString(R.string.not_supported)
         }
     }
 
     //Ported and adapted from treble (https://github.com/kevintresuelo/treble)
-    private fun vndkVersion(context: Context) : String {
+    private fun vndkVersion() : String {
         val processLite = Runtime.getRuntime().exec("getprop ro.vndk.lite").inputStream.bufferedReader().use(BufferedReader::readLine)
         var vndkLite = ""
         if (processLite == "true")
-            vndkLite = "(" + context.getString(R.string.lite) + ")"
+            vndkLite = "(" + applicationContext.getString(R.string.lite) + ")"
         val processVersion = Runtime.getRuntime().exec("getprop ro.vndk.version").inputStream.bufferedReader().use(BufferedReader::readText)
         return if (processVersion.substring(0, processVersion.length - 1).isNotEmpty()) {
             processVersion.substring(0, processVersion.length - 1) + " " + vndkLite
         } else {
-            context.getString(R.string.not_supported)
+            applicationContext.getString(R.string.not_supported)
         }
     }
 
+    /*
+     1 -> Virtual
+     2 -> Classic
+     */
+    private var partitionStatusInt: Int = 0
+
     //Ported and adapted from treble (https://github.com/kevintresuelo/treble)
-    private fun partitionStatus(context: Context) : String {
+    private fun partitionStatus() : String {
         val processVirtualABEnabled = Runtime.getRuntime().exec("getprop ro.virtual_ab.enabled").inputStream.bufferedReader().use(BufferedReader::readText)
         val processVirtualABRetrofit = Runtime.getRuntime().exec("getprop ro.virtual_ab.retrofit").inputStream.bufferedReader().use(BufferedReader::readText)
         val processBootSlotSuffix = Runtime.getRuntime().exec("getprop ro.boot.slot_suffix").inputStream.bufferedReader().use(BufferedReader::readText)
@@ -75,19 +87,20 @@ object TrebleHelper {
         val buildABEnabled = processBootSlotSuffix.substring(0, processBuildABEnabled.length - 1)
 
         if (virtualABEnabled == "true" && virtualABRetrofit == "false") {
-            return context.getString(R.string.virtual_a_b_partitioning)
+            partitionStatusInt = 1
+            return applicationContext.getString(R.string.virtual_a_b_partitioning)
         }
         if (bootSlotSuffix.isNotEmpty() || buildABEnabled == "true") {
-            return context.getString(R.string.legacy_a_b_partitioning)
+            partitionStatusInt = 2
+            return applicationContext.getString(R.string.legacy_a_b_partitioning)
         }
-        return context.getString(R.string.not_supported)
+        return applicationContext.getString(R.string.not_supported)
     }
 
-    private fun seamlessUpdate(context: Context) : String {
-        return when (partitionStatus(context)) {
-            context.getString(R.string.virtual_a_b_partitioning) -> context.getString(R.string.supported)
-            context.getString(R.string.legacy_a_b_partitioning) -> context.getString(R.string.supported)
-            else -> context.getString(R.string.not_supported)
+    private fun seamlessUpdate() : String {
+        return when (partitionStatusInt) {
+            1,2 -> applicationContext.getString(R.string.supported)
+            else -> applicationContext.getString(R.string.not_supported)
         }
     }
 
@@ -109,28 +122,28 @@ object TrebleHelper {
     }
 
     //Ported and adapted from treble (https://github.com/kevintresuelo/treble)
-    private fun systemMount(context: Context) : String {
+    private fun systemMount() : String {
         val mountsPoints = mountPoints()
         val systemOnBlock = mountsPoints.none { it.device != "none" && it.mountPoint == "/system" && it.fileSystem != "tmpfs"}
         val deviceMountedOnRoot = mountsPoints.any { it.device == "/dev/root" && it.mountPoint == "/" }
         val systemOnRoot = mountsPoints.any { it.mountPoint == "/system_root" && it.fileSystem != "tmpfs" }
         return if (systemOnBlock || deviceMountedOnRoot || systemOnRoot) {
-            context.getString(R.string.supported)
+            applicationContext.getString(R.string.supported)
         } else {
-            context.getString(R.string.not_supported)
+            applicationContext.getString(R.string.not_supported)
         }
     }
 
-    private fun systemMountMethod(context: Context) : String {
+    private fun systemMountMethod() : String {
         val mountsPoints = mountPoints()
         val systemOnBlock = mountsPoints.none { it.device != "none" && it.mountPoint == "/system" && it.fileSystem != "tmpfs"}
         val deviceMountedOnRoot = mountsPoints.any { it.device == "/dev/root" && it.mountPoint == "/" }
         val systemOnRoot = mountsPoints.any { it.mountPoint == "/system_root" && it.fileSystem != "tmpfs" }
         return when {
-            systemOnRoot -> { context.getString(R.string.mounted_like_system_as_root) }
-            deviceMountedOnRoot -> { context.getString(R.string.mounted_like_device_as_root) }
-            systemOnBlock -> { context.getString(R.string.mounted_like_system_on_block) }
-            else -> { context.getString(R.string.not_supported) }
+            systemOnRoot -> { applicationContext.getString(R.string.mounted_like_system_as_root) }
+            deviceMountedOnRoot -> { applicationContext.getString(R.string.mounted_like_device_as_root) }
+            systemOnBlock -> { applicationContext.getString(R.string.mounted_like_system_on_block) }
+            else -> { applicationContext.getString(R.string.not_supported) }
         }
     }
 

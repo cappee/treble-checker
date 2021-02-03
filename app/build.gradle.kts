@@ -44,6 +44,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.21")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
     implementation("androidx.core:core-ktx:1.3.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
 
     implementation(platform("com.google.firebase:firebase-bom:25.12.0"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")

@@ -1,11 +1,14 @@
 package dev.cappee.treble.main
 
+import android.content.Context
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
@@ -54,30 +57,30 @@ class MainActivity : AppCompatActivity() {
                 })
             }
             binding.root.addView(glSurfaceView)
-
-            //Init ViewPager
-            binding.viewPager.apply {
-                (getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-                adapter = withContext(Dispatchers.Default) {
-                    ViewPagerAdapter(this@MainActivity,
-                        TrebleHelper.get(this@MainActivity),
-                        RootHelper.get(this@MainActivity),
-                        DeviceHelper.get(this@MainActivity))
-                }
-            }
-
-            //Init TabLayout
-            TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab: TabLayout.Tab, position: Int ->
-                when (position) {
-                    0 -> tab.text = "Treble"
-                    1 -> tab.text = "Root"
-                    2 -> tab.text = "Device"
-                }
-            }.attach()
-
-            //Hide progressbar
-            binding.progressBar.visibility = View.INVISIBLE
         }
+
+        //Pass context needed to get display info
+        TrebleHelper.init(this@MainActivity)
+        RootHelper.init(this@MainActivity)
+        DeviceHelper.init(this@MainActivity)
+
+        //Init ViewPager
+        binding.viewPager.apply {
+            (getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            adapter = ViewPagerAdapter(this@MainActivity)
+        }
+
+        //Init TabLayout
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab: TabLayout.Tab, position: Int ->
+            when (position) {
+                0 -> tab.text = "Treble"
+                1 -> tab.text = "Root"
+                2 -> tab.text = "Device"
+            }
+        }.attach()
+
+        //Hide progressbar
+        binding.progressBar.visibility = View.INVISIBLE
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

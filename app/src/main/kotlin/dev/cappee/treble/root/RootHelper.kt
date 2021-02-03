@@ -10,14 +10,20 @@ import java.io.File
 
 object RootHelper {
 
-    suspend fun get(context: Context) = coroutineScope {
+    suspend fun get() = coroutineScope {
         async(Dispatchers.Default) { Root(
-            rootPermissions(context),
-            rootPath(context),
-            busyBoxInstalled(context),
-            busyBoxBuildDate(context)
+            rootPermissions(),
+            rootPath(),
+            busyBoxInstalled(),
+            busyBoxBuildDate()
         ) }
     }.await()
+
+    fun init(context: Context) {
+        applicationContext = context.applicationContext
+    }
+
+    private lateinit var applicationContext: Context
 
     /*
      Hey you who are reading this code, update this array if you think that some are missing
@@ -33,42 +39,41 @@ object RootHelper {
         "/data/local/"
     )
 
-    private fun rootPermissions(context: Context) : String {
-        println("THREAD ROOT: ${Thread.currentThread()}")
+    private fun rootPermissions() : String {
         for (path in possiblePath) {
             if (File(path + "su").exists()) {
-                return context.getString(R.string.available)
+                return applicationContext.getString(R.string.available)
             }
         }
-        return context.getString(R.string.not_available)
+        return applicationContext.getString(R.string.not_available)
     }
 
-    private fun rootPath(context: Context) : String {
+    private fun rootPath() : String {
         for (path in possiblePath) {
             if (File(path + "su").exists()) {
                 return path + "su"
             }
         }
-        return context.getString(R.string.no_root_path_found)
+        return applicationContext.getString(R.string.no_root_path_found)
     }
 
-    private fun busyBoxInstalled(context: Context) : String {
+    private fun busyBoxInstalled() : String {
         return try {
             val line = Runtime.getRuntime().exec("busybox").inputStream.bufferedReader().use(BufferedReader::readLine)
             val version = line.split("\\s+".toRegex()).toTypedArray()[1]
-            context.getString(R.string.present) + ", " + version.subSequence(1, 7)
+            applicationContext.getString(R.string.present) + ", " + version.subSequence(1, 7)
         } catch (e: Exception) {
-            context.getString(R.string.not_installed)
+            applicationContext.getString(R.string.not_installed)
         }
     }
 
-    private fun busyBoxBuildDate(context: Context) : String {
+    private fun busyBoxBuildDate() : String {
         return try {
             val line = Runtime.getRuntime().exec("busybox").inputStream.bufferedReader().use(BufferedReader::readLine)
             val date = line.substringAfter("(", "")
             date.subSequence(0, 10).toString()
         } catch (e: Exception) {
-            context.getString(R.string.not_installed)
+            applicationContext.getString(R.string.not_installed)
         }
     }
 

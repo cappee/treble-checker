@@ -10,10 +10,7 @@ import dev.cappee.treble.root.RootFragment
 import dev.cappee.treble.treble.Treble
 import dev.cappee.treble.treble.TrebleFragment
 
-class ViewPagerAdapter(fragmentActivity: FragmentActivity,
-                       private val treble: Treble,
-                       private val root: Root,
-                       private val device: Device) : FragmentStateAdapter(fragmentActivity) {
+class ViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
 
     override fun getItemCount(): Int {
         return 3
@@ -21,9 +18,9 @@ class ViewPagerAdapter(fragmentActivity: FragmentActivity,
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> TrebleFragment.newInstance(treble)
-            1 -> RootFragment.newInstance(root)
-            2 -> DeviceFragment.newInstance(device)
+            0 -> TrebleFragment()
+            1 -> RootFragment()
+            2 -> DeviceFragment()
             else -> TrebleFragment()
         }
     }

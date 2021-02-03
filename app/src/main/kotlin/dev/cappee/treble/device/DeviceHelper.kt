@@ -25,17 +25,16 @@ import kotlin.math.sqrt
 
 object DeviceHelper {
 
-    suspend fun get(context: Context) = coroutineScope {
-        initDisplay(context, context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+    suspend fun get() = coroutineScope {
         async(Dispatchers.Default) { Device(
             identifier(),
-            batteryCapacityExperimental(context),
+            batteryCapacityExperimental(),
             cpu(),
             gpu,
             cpuArch(),
-            totalRam(context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager),
-            internalStorage(context),
-            externalStorage(context),
+            totalRam(),
+            internalStorage(),
+            externalStorage(),
             displaySize(),
             displayResolution(),
             displayDPI(),
@@ -43,9 +42,25 @@ object DeviceHelper {
         ) }
     }.await()
 
+    @Suppress("DEPRECATION")
+    fun init(context: Context) {
+        applicationContext = context.applicationContext
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            display = context.display ?: (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
+            context.display?.getRealMetrics(displayMetrics)
+            context.display?.getRealSize(displayPoint)
+        } else {
+            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            display = windowManager.defaultDisplay
+            windowManager.defaultDisplay.getRealMetrics(displayMetrics)
+            windowManager.defaultDisplay.getRealSize(displayPoint)
+        }
+    }
+
+    private lateinit var applicationContext: Context
+
     private fun identifier() : String {
-        println("THREAD DEVICE: ${Thread.currentThread()}")
-        return Build.MANUFACTURER + " " + Build.DEVICE + " (" + Build.MODEL + ")"
+        return Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
     }
 
     fun batteryCapacity(context: Context) : String {
@@ -89,9 +104,9 @@ object DeviceHelper {
     lateinit var gpu: String
 
     //Ported (and simplified) from DroidInfo (https://github.com/cappee/DroidInfo)
-    private fun totalRam(activityManager: ActivityManager) : String {
+    private fun totalRam() : String {
         val memoryInfo = ActivityManager.MemoryInfo()
-        activityManager.getMemoryInfo(memoryInfo)
+        (applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getMemoryInfo(memoryInfo)
         val ram = memoryInfo.totalMem
         return if ((ram / 1073741824.0) > 1) {
             String.format("%.1f", ram / 1073741824.0) + " Gb"
@@ -100,23 +115,23 @@ object DeviceHelper {
         }
     }
 
-    private fun internalStorage(context: Context) : String {
+    private fun internalStorage() : String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             val root = Environment.getRootDirectory()
             val data = Environment.getDataDirectory()
             val sizeBytes = StatFs(root.path).totalBytes + StatFs(data.path).totalBytes
-            String.format("%.1f", sizeBytes / 1073741824.0) + " Gb (" + String.format("%.1f", StatFs(root.path).totalBytes / 1073741824.0) + "gb " + context.getString(R.string.grammatical_particle_of) + " /root)"
+            String.format("%.1f", sizeBytes / 1073741824.0) + " Gb (" + String.format("%.1f", StatFs(root.path).totalBytes / 1073741824.0) + "gb " + applicationContext.getString(R.string.grammatical_particle_of) + " /root)"
         } else {
-            context.getString(R.string.api_18_required)
+            applicationContext.getString(R.string.api_18_required)
         }
     }
 
     @Suppress("DEPRECATION")
-    private fun externalStorage(context: Context) : String {
+    private fun externalStorage() : String {
         if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED || Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED_READ_ONLY) {
             when {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
-                    val externalDirs: Array<File> = context.getExternalFilesDirs(null)
+                    val externalDirs: Array<File> = applicationContext.getExternalFilesDirs(null)
                     var resultDirs: Array<String> = emptyArray()
                     for (file in externalDirs) {
                         val path: String = file.path.split("/Android")[0]
@@ -132,7 +147,7 @@ object DeviceHelper {
                     try {
                         ext = StatFs(storageDirectories)
                     } catch (e: Exception) {
-                        return context.getString(R.string.not_mounted)
+                        return applicationContext.getString(R.string.not_mounted)
                     }
                     return String.format("%.1f", ext.totalBytes / 1073741824.0) + " Gb"
                 }
@@ -141,35 +156,22 @@ object DeviceHelper {
                     try {
                         ext = StatFs(Environment.getExternalStorageDirectory().path)
                     } catch (e: Exception) {
-                        return context.getString(R.string.not_mounted)
+                        return applicationContext.getString(R.string.not_mounted)
                     }
                     return String.format("%.1f", ext.totalBytes / 1073741824.0) + " Gb"
                 }
                 else -> {
-                    return context.getString(R.string.api_18_required)
+                    return applicationContext.getString(R.string.api_18_required)
                 }
             }
         } else {
-            return context.getString(R.string.not_mounted)
+            return applicationContext.getString(R.string.not_mounted)
         }
     }
 
     private lateinit var display: Display
     private val displayMetrics: DisplayMetrics = DisplayMetrics()
     private val displayPoint: Point = Point()
-
-    @Suppress("DEPRECATION")
-    private fun initDisplay(context: Context, windowManager: WindowManager) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            display = context.display ?: windowManager.defaultDisplay
-            context.display?.getRealMetrics(displayMetrics)
-            context.display?.getRealSize(displayPoint)
-        } else {
-            display = windowManager.defaultDisplay
-            windowManager.defaultDisplay.getRealMetrics(displayMetrics)
-            windowManager.defaultDisplay.getRealSize(displayPoint)
-        }
-    }
 
     //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
     private fun displaySize() : String {
@@ -200,8 +202,6 @@ object DeviceHelper {
         } else {
             resolution
         }
-
-
     }
 
     //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
@@ -220,21 +220,23 @@ object DeviceHelper {
         return "${refreshRate.roundToInt()} Hz"
     }
 
-    private fun batteryCapacityExperimental(context: Context) : String {
+    private fun batteryCapacityExperimental() : String {
         val powerProfile: Any?
         try {
             powerProfile = Class.forName("com.android.internal.os.PowerProfile")
-                .getConstructor(Context::class.java).newInstance(context)
+                .getConstructor(Context::class.java).newInstance(applicationContext)
         } catch (e: Exception) {
-            return context.getString(R.string.not_found)
+            return applicationContext.getString(R.string.not_found)
         }
         val batteryCapacity: Double
-        try {
-            batteryCapacity = Class.forName("com.android.internal.os.PowerProfile").getMethod("getAveragePower", String::class.java).invoke(powerProfile, "battery.capacity") as Double
+        return try {
+            batteryCapacity = Class.forName("com.android.internal.os.PowerProfile")
+                .getMethod("getAveragePower", String::class.java)
+                .invoke(powerProfile, "battery.capacity") as Double
+            "$batteryCapacity mAh"
         } catch (e: Exception) {
-            return context.getString(R.string.not_found)
+            applicationContext.getString(R.string.not_found)
         }
-        return "$batteryCapacity mAh"
     }
 
 }

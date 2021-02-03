@@ -9,85 +9,78 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import dev.cappee.treble.R
+import dev.cappee.treble.databinding.LayoutRecyclerBinding
 
 class RecyclerViewAdapter(private val context: Context?, private val titles: Array<Int>, private val allSubtitles: Array<Array<Int>>, private val allData: Array<Array<String>>, private val allButtons: Array<Pair<Int, Int>>?) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val title: MaterialTextView = itemView.findViewById(R.id.textViewPlaceholderTitle)
-        val subtitleFirst: MaterialTextView = itemView.findViewById(R.id.textViewPlaceholderSubtitleFirst)
-        val first: MaterialTextView = itemView.findViewById(R.id.textViewPlaceholderFirst)
-        val subtitleSecond: MaterialTextView = itemView.findViewById(R.id.textViewPlaceholderSubtitleSecond)
-        val second: MaterialTextView = itemView.findViewById(R.id.textViewPlaceholderSecond)
-        val subtitleThird: MaterialTextView = itemView.findViewById(R.id.textViewPlaceholderSubtitleThird)
-        val third: MaterialTextView = itemView.findViewById(R.id.textViewPlaceholderThird)
-        val subtitleFourth: MaterialTextView = itemView.findViewById(R.id.textViewPlaceholderSubtitleFourth)
-        val fourth: MaterialTextView = itemView.findViewById(R.id.textViewPlaceholderFourth)
-        val button: MaterialButton = itemView.findViewById(R.id.buttonMoreInfo)
-    }
+    inner class ViewHolder(val binding: LayoutRecyclerBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_recycler, parent, false))
+        return ViewHolder(LayoutRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.title.text = context?.getString(titles[position])
-        val subtitles : Array<Int> = allSubtitles[position]
-        val data : Array<String> = allData[position]
+        with(holder) {
+            binding.textViewTitle.text = context?.getString(titles[position])
+            val subtitles : Array<Int> = allSubtitles[position]
+            val data : Array<String> = allData[position]
 
-        when (subtitles.size) {
-            4 -> {
-                holder.subtitleFirst.text = context?.getString(subtitles[0])
-                holder.first.text = data[0]
-                holder.subtitleSecond.text = context?.getString(subtitles[1])
-                holder.second.text = data[1]
-                holder.subtitleThird.text = context?.getString(subtitles[2])
-                holder.third.text = data[2]
-                holder.subtitleFourth.text = context?.getString(subtitles[3])
-                holder.fourth.text = data[3]
-            }
-            3 -> {
-                holder.subtitleFourth.visibility = MaterialTextView.GONE
-                holder.fourth.visibility = MaterialTextView.GONE
-                holder.subtitleFirst.text = context?.getString(subtitles[0])
-                holder.first.text = data[0]
-                holder.subtitleSecond.text = context?.getString(subtitles[1])
-                holder.second.text = data[1]
-                holder.subtitleThird.text = context?.getString(subtitles[2])
-                holder.third.text = data[2]
-            }
-            2 -> {
-                holder.subtitleFourth.visibility = MaterialTextView.GONE
-                holder.fourth.visibility = MaterialTextView.GONE
-                holder.subtitleThird.visibility = MaterialTextView.GONE
-                holder.third.visibility = MaterialTextView.GONE
-                holder.subtitleFirst.text = context?.getString(subtitles[0])
-                holder.first.text = data[0]
-                holder.subtitleSecond.text = context?.getString(subtitles[1])
-                holder.second.text = data[1]
-            }
-            1 -> {
-                holder.subtitleFourth.visibility = MaterialTextView.GONE
-                holder.fourth.visibility = MaterialTextView.GONE
-                holder.subtitleThird.visibility = MaterialTextView.GONE
-                holder.third.visibility = MaterialTextView.GONE
-                holder.subtitleSecond.visibility = MaterialTextView.GONE
-                holder.second.visibility = MaterialTextView.GONE
-                holder.subtitleFirst.text = context?.getString(subtitles[0])
-                holder.first.text = data[0]
-            }
-        }
-        if (!allButtons.isNullOrEmpty()) {
-            val buttons = allButtons[position]
-            holder.button.setOnClickListener {
-                if (context != null) {
-                    MaterialDialog(context, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
-                        title(buttons.first)
-                        message(buttons.second)
-                    }
+            when (subtitles.size) {
+                4 -> {
+                    binding.textViewDescriptionFirst.text = context?.getString(subtitles[0])
+                    binding.textViewFirst.text = data[0]
+                    binding.textViewDescriptionSecond.text = context?.getString(subtitles[1])
+                    binding.textViewSecond.text = data[1]
+                    binding.textViewDescriptionThird.text = context?.getString(subtitles[2])
+                    binding.textViewThird.text = data[2]
+                    binding.textViewDescriptionFourth.text = context?.getString(subtitles[3])
+                    binding.textViewFourth.text = data[3]
+                }
+                3 -> {
+                    binding.textViewDescriptionFourth.visibility = MaterialTextView.GONE
+                    binding.textViewFourth.visibility = MaterialTextView.GONE
+                    binding.textViewDescriptionFirst.text = context?.getString(subtitles[0])
+                    binding.textViewFirst.text = data[0]
+                    binding.textViewDescriptionSecond.text = context?.getString(subtitles[1])
+                    binding.textViewSecond.text = data[1]
+                    binding.textViewDescriptionThird.text = context?.getString(subtitles[2])
+                    binding.textViewThird.text = data[2]
+                }
+                2 -> {
+                    binding.textViewDescriptionFourth.visibility = MaterialTextView.GONE
+                    binding.textViewFourth.visibility = MaterialTextView.GONE
+                    binding.textViewDescriptionThird.visibility = MaterialTextView.GONE
+                    binding.textViewThird.visibility = MaterialTextView.GONE
+                    binding.textViewDescriptionFirst.text = context?.getString(subtitles[0])
+                    binding.textViewFirst.text = data[0]
+                    binding.textViewDescriptionSecond.text = context?.getString(subtitles[1])
+                    binding.textViewSecond.text = data[1]
+                }
+                1 -> {
+                    binding.textViewDescriptionFourth.visibility = MaterialTextView.GONE
+                    binding.textViewFourth.visibility = MaterialTextView.GONE
+                    binding.textViewDescriptionThird.visibility = MaterialTextView.GONE
+                    binding.textViewThird.visibility = MaterialTextView.GONE
+                    binding.textViewDescriptionSecond.visibility = MaterialTextView.GONE
+                    binding.textViewSecond.visibility = MaterialTextView.GONE
+                    binding.textViewDescriptionFirst.text = context?.getString(subtitles[0])
+                    binding.textViewFirst.text = data[0]
                 }
             }
-        } else {
-            holder.button.visibility = MaterialButton.GONE
+            if (!allButtons.isNullOrEmpty()) {
+                with(allButtons[position]) {
+                    binding.buttonMoreInfo.setOnClickListener {
+                        if (context != null) {
+                            MaterialDialog(context, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+                                title(first)
+                                message(second)
+                            }
+                        }
+                    }
+                }
+            } else {
+                binding.buttonMoreInfo.visibility = MaterialButton.GONE
+            }
         }
     }
 

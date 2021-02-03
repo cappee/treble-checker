@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cardViewPlaceholder"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     style="@style/Widget.Card.Elevated">
@@ -13,13 +12,13 @@
         android:orientation="vertical">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewPlaceholderTitle"
+            android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Appearance.Title"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewPlaceholderSubtitleFirst"
+            android:id="@+id/textViewDescriptionFirst"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -28,7 +27,7 @@
             style="@style/Appearance.Body"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewPlaceholderFirst"
+            android:id="@+id/textViewFirst"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -36,7 +35,7 @@
             style="@style/Appearance.Body.Darker"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewPlaceholderSubtitleSecond"
+            android:id="@+id/textViewDescriptionSecond"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -45,7 +44,7 @@
             style="@style/Appearance.Body"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewPlaceholderSecond"
+            android:id="@+id/textViewSecond"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -53,7 +52,7 @@
             style="@style/Appearance.Body.Darker"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewPlaceholderSubtitleThird"
+            android:id="@+id/textViewDescriptionThird"
             style="@style/Appearance.Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,7 +61,7 @@
             android:layout_marginEnd="4dp" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewPlaceholderThird"
+            android:id="@+id/textViewThird"
             style="@style/Appearance.Body.Darker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,7 +69,7 @@
             android:layout_marginEnd="4dp" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewPlaceholderSubtitleFourth"
+            android:id="@+id/textViewDescriptionFourth"
             style="@style/Appearance.Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +78,7 @@
             android:layout_marginEnd="4dp" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewPlaceholderFourth"
+            android:id="@+id/textViewFourth"
             style="@style/Appearance.Body.Darker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
