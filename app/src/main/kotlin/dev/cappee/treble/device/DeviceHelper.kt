@@ -181,21 +181,27 @@ object DeviceHelper {
     //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
     private fun displayResolution(): String {
         val resolution = "${displayMetrics.heightPixels}x${displayMetrics.widthPixels}"
-        return if (display.isHdr) {
-            when {
-                display.hdrCapabilities.supportedHdrTypes.contains(Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS) -> {
-                    "$resolution (HDR10+)"
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (display.isHdr) {
+                when {
+                    display.hdrCapabilities.supportedHdrTypes.contains(Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS) -> {
+                        "$resolution (HDR10+)"
+                    }
+                    display.hdrCapabilities.supportedHdrTypes.contains(Display.HdrCapabilities.HDR_TYPE_HDR10) -> {
+                        "$resolution (HDR10)"
+                    }
+                    else -> {
+                        "$resolution (HDR)"
+                    }
                 }
-                display.hdrCapabilities.supportedHdrTypes.contains(Display.HdrCapabilities.HDR_TYPE_HDR10) -> {
-                    "$resolution (HDR10)"
-                }
-                else -> {
-                    "$resolution (HDR)"
-                }
+            } else {
+                resolution
             }
         } else {
             resolution
         }
+
+
     }
 
     //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
