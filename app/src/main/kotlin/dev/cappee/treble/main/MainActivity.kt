@@ -5,6 +5,7 @@ import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.LayoutMode
@@ -57,11 +58,7 @@ class MainActivity : AppCompatActivity() {
             }
             binding.root.addView(glSurfaceView)
         }
-
         //Pass context to repository classes
-        TrebleHelper.init(this@MainActivity)
-        RootHelper.init(this@MainActivity)
-        DeviceHelper.init(this@MainActivity)
 
         //Init ViewPager
         binding.viewPager.apply {

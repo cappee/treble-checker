@@ -1,6 +1,5 @@
 package dev.cappee.treble.settings
 
-import android.app.Application
 import androidx.lifecycle.*
 import dev.cappee.treble.BuildConfig
 import dev.cappee.treble.device.DeviceHelper
@@ -8,9 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SettingsViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val settingsRepository = SettingsRepository(application.applicationContext!!)
+class SettingsViewModel(private val settingsRepository: SettingsRepository) : ViewModel() {
 
     val identifierEntries = DeviceHelper.possibleIdentifierOrder
 

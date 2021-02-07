@@ -1,26 +1,36 @@
 package dev.cappee.treble.main
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import dev.cappee.treble.device.Device
 import dev.cappee.treble.device.DeviceHelper
 import dev.cappee.treble.root.Root
 import dev.cappee.treble.root.RootHelper
 import dev.cappee.treble.treble.Treble
 import dev.cappee.treble.treble.TrebleHelper
-import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    private val trebleHelper: TrebleHelper,
+    private val rootHelper: RootHelper,
+    private val deviceHelper: DeviceHelper
+) : ViewModel() {
 
     val liveDataTreble: LiveData<Treble> = liveData {
-        emit(TrebleHelper.get())
+        val data = trebleHelper.get()
+        emit(data)
     }
 
     val liveDataRoot: LiveData<Root> = liveData {
-        emit(RootHelper.get())
+        val data = rootHelper.get()
+        emit(data)
     }
 
     val liveDataDevice: LiveData<Device> = liveData {
-        emit(DeviceHelper.get())
+        val data = deviceHelper.get()
+        emit(data)
     }
+
+    var test = "GIGI"
 
 }

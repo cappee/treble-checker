@@ -24,8 +24,9 @@ object TrebleHelper {
         ) }
     }.await()
 
-    fun init(context: Context) {
+    fun init(context: Context) : TrebleHelper {
         applicationContext = context.applicationContext
+        return this
     }
 
     private lateinit var applicationContext: Context

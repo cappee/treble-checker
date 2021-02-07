@@ -3,6 +3,7 @@ package dev.cappee.treble.settings
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -25,7 +26,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var preferenceDeveloper: Preference
     private lateinit var preferenceVersion: Preference
 
-    private val viewModel: SettingsViewModel by activityViewModels { ViewModelProvider.AndroidViewModelFactory(activity?.application!!) }
+    private val viewModel: SettingsViewModel by viewModels {
+        SettingsViewModelFactory(SettingsRepository(context!!))
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

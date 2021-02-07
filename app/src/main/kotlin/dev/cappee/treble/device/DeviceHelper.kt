@@ -32,7 +32,7 @@ object DeviceHelper {
             identifier(),
             batteryCapacity(),
             cpu() as String,
-            gpu,
+            gpu ?: applicationContext.getString(R.string.error_report_this_please),
             cpuArch(),
             totalRam(),
             internalStorage(),
@@ -45,7 +45,7 @@ object DeviceHelper {
     }.await()
 
     @Suppress("DEPRECATION")
-    fun init(context: Context) {
+    fun init(context: Context) : DeviceHelper {
         applicationContext = context.applicationContext
         settingsRepository = SettingsRepository(applicationContext)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -58,6 +58,7 @@ object DeviceHelper {
             windowManager.defaultDisplay.getRealMetrics(displayMetrics)
             windowManager.defaultDisplay.getRealSize(displayPoint)
         }
+        return this
     }
 
     private lateinit var applicationContext: Context
@@ -124,7 +125,7 @@ object DeviceHelper {
         }
     }
 
-    lateinit var gpu: String
+    var gpu: String? = null
 
     //Ported (and simplified) from DroidInfo (https://github.com/cappee/DroidInfo)
     private fun totalRam() : String {

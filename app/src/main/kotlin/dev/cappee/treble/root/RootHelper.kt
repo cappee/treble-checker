@@ -2,6 +2,7 @@ package dev.cappee.treble.root
 
 import android.content.Context
 import dev.cappee.treble.R
+import dev.cappee.treble.treble.TrebleHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -19,8 +20,9 @@ object RootHelper {
         ) }
     }.await()
 
-    fun init(context: Context) {
+    fun init(context: Context) : RootHelper {
         applicationContext = context.applicationContext
+        return this
     }
 
     private lateinit var applicationContext: Context

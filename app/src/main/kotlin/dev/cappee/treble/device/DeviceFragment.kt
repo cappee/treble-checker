@@ -12,6 +12,7 @@ import dev.cappee.treble.R
 import dev.cappee.treble.main.recycler.RecyclerViewAdapter
 import dev.cappee.treble.databinding.FragmentMainBinding
 import dev.cappee.treble.main.MainViewModel
+import dev.cappee.treble.main.MainViewModelFactory
 import dev.cappee.treble.main.recycler.ItemDecoration
 
 class DeviceFragment : Fragment() {

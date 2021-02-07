@@ -10,13 +10,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.cappee.treble.R
 import dev.cappee.treble.databinding.FragmentMainBinding
+import dev.cappee.treble.device.DeviceHelper
 import dev.cappee.treble.main.MainViewModel
+import dev.cappee.treble.main.MainViewModelFactory
 import dev.cappee.treble.main.recycler.ItemDecoration
 import dev.cappee.treble.main.recycler.RecyclerViewAdapter
+import dev.cappee.treble.root.RootHelper
 
 class TrebleFragment : Fragment() {
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: MainViewModel by activityViewModels { MainViewModelFactory(TrebleHelper.init(context!!), RootHelper.init(context!!), DeviceHelper.init(context!!)) }
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
