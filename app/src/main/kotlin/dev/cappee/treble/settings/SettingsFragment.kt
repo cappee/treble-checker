@@ -2,9 +2,7 @@ package dev.cappee.treble.settings
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -53,12 +51,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 onPreferenceClickListener = Preference.OnPreferenceClickListener {
                     MaterialDialog(context!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
                         title(R.string.battery)
-                        listItemsSingleChoice(res = R.array.battery_entries, initialSelection = if (value) { 1 } else { 0 }, selection = object : SingleChoiceListener {
-                            override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
-                                dialog.dismiss()
-                                viewModel.setBatteryModeExperimental(index)
+                        listItemsSingleChoice(
+                            res = R.array.battery_entries,
+                            initialSelection = if (value) { 1 } else { 0 },
+                            selection = object : SingleChoiceListener {
+                                override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
+                                    dialog.dismiss()
+                                    viewModel.setBatteryModeExperimental(index)
+                                }
                             }
-                        })
+                        )
                     }
                     return@OnPreferenceClickListener true
                 }
@@ -71,12 +73,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 onPreferenceClickListener = Preference.OnPreferenceClickListener {
                     MaterialDialog(context!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
                         title(R.string.identifier)
-                        listItemsSingleChoice(items = viewModel.identifierEntries, initialSelection = value, selection = object : SingleChoiceListener {
-                            override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
-                                dialog.dismiss()
-                                viewModel.setIdentifierOrder(index)
+                        listItemsSingleChoice(
+                            items = viewModel.identifierEntries,
+                            initialSelection = value,
+                            selection = object : SingleChoiceListener {
+                                override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
+                                    dialog.dismiss()
+                                    viewModel.setIdentifierOrder(index)
+                                }
                             }
-                        })
+                        )
                     }
                     return@OnPreferenceClickListener true
                 }
@@ -84,20 +90,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         viewModel.liveDataProcessorShownAs.observeForever { value ->
-            runBlocking {
-                viewModel.updateCpuValues()
-            }
             preferenceProcessor.apply {
-                summary = String.format(getString(R.string.processor_summary), viewModel.cpu)
+                summary = String.format(getString(R.string.processor_summary), runBlocking { DeviceHelper.cpu(value = value) })
                 onPreferenceClickListener = Preference.OnPreferenceClickListener {
                     MaterialDialog(context!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
                         title(R.string.processor)
-                        listItemsSingleChoice(items = viewModel.cpuEntries, initialSelection = value, selection = object : SingleChoiceListener {
-                            override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
-                                dialog.dismiss()
-                                viewModel.setProcessorShownAs(index)
+                        listItemsSingleChoice(
+                            items = viewModel.cpuEntries.values.toMutableList(),
+                            initialSelection = DeviceHelper.getCpuIndexByString(value),
+                            selection = object : SingleChoiceListener {
+                                override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
+                                    dialog.dismiss()
+                                    viewModel.setProcessorShownAs(viewModel.cpuEntries.keys.elementAt(index))
+                                }
                             }
-                        })
+                        )
                     }
                     return@OnPreferenceClickListener true
                 }

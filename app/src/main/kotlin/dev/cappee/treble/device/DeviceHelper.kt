@@ -92,8 +92,17 @@ object DeviceHelper {
         }
     }
 
+    fun getCpuIndexByString(value: String) : Int {
+        return when (value) {
+            "Hardware" -> 0
+            "Processor" -> 1
+            "model name" -> 2
+            else -> 0
+        }
+    }
+
     //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
-    suspend fun cpu(list: Boolean? = null ?: false) : Any {
+    suspend fun cpu(list: Boolean? = null ?: false, value: String? = null) : Any {
         val map: MutableMap<String, String> = HashMap()
         try {
             val scanner = Scanner(File("/proc/cpuinfo"))
@@ -104,15 +113,21 @@ object DeviceHelper {
         } catch (e: FileNotFoundException) {
             throw e
         }
-        val possibleCpu = mutableListOf(
-            map["Hardware"],
-            map["Processor"],
-            map["model name"]
+        val possibleCpuEntries: MutableMap<String, CharSequence> = mutableMapOf(
+            Pair("Hardware", map["Hardware"] ?: ""),
+            Pair("Processor", map["Processor"] ?: ""),
+            Pair("model name", map["model name"] ?: "")
         )
-        return if (list!!) {
-            possibleCpu
-        } else {
-            possibleCpu[settingsRepository.getProcessorShownAs().first()] ?: ""
+        return when {
+            list!! -> {
+                possibleCpuEntries
+            }
+            value != null -> {
+                possibleCpuEntries[value] ?: ""
+            }
+            else -> {
+                possibleCpuEntries[settingsRepository.getProcessorShownAs().first()] ?: applicationContext.getString(R.string.error_report_this_please)
+            }
         }
     }
 

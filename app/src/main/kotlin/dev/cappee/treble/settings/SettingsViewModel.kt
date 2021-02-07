@@ -3,26 +3,16 @@ package dev.cappee.treble.settings
 import androidx.lifecycle.*
 import dev.cappee.treble.BuildConfig
 import dev.cappee.treble.device.DeviceHelper
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runBlocking
 
 class SettingsViewModel(private val settingsRepository: SettingsRepository) : ViewModel() {
 
     val identifierEntries = DeviceHelper.possibleIdentifierOrder
 
-    lateinit var cpu: String
-    lateinit var cpuEntries: MutableList<CharSequence>
-    suspend fun updateCpuValues() {
-        cpu = withContext(Dispatchers.Default) {
-            DeviceHelper.cpu() as String
-        }
-        @Suppress("UNCHECKED_CAST")
-        cpuEntries = withContext(Dispatchers.Default) {
-            val entries = DeviceHelper.cpu(true) as MutableList<CharSequence?>
-            entries.removeIf { it.isNullOrEmpty() || it == "0" }
-            return@withContext entries as MutableList<CharSequence>
-        }
+    @Suppress("UNCHECKED_CAST")
+    val cpuEntries: MutableMap<String, CharSequence> = runBlocking {
+        DeviceHelper.cpu(true) as MutableMap<String, CharSequence>
     }
 
     val liveDataBatteryMode = settingsRepository.getBatteryFetchModeExperimental().asLiveData()
@@ -43,7 +33,7 @@ class SettingsViewModel(private val settingsRepository: SettingsRepository) : Vi
 
     val liveDataProcessorShownAs = settingsRepository.getProcessorShownAs().asLiveData()
 
-    fun setProcessorShownAs(value: Int) {
+    fun setProcessorShownAs(value: String) {
         viewModelScope.launch {
             settingsRepository.setProcessorShownAs(value)
         }

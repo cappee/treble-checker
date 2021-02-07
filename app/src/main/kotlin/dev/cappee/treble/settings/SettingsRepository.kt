@@ -14,7 +14,7 @@ class SettingsRepository(context: Context) {
 
     private val batteryFetchModeExperimental = booleanPreferencesKey("battery_fetch_mode_experimental")
     private val identifierOrder = intPreferencesKey("identifier_order")
-    private val processorShownAs = intPreferencesKey("chipset_shown_as")
+    private val processorShownAs = stringPreferencesKey("processor_shown_as")
 
     fun getBatteryFetchModeExperimental(): Flow<Boolean> = dataStore.data
         .catch {
@@ -56,7 +56,7 @@ class SettingsRepository(context: Context) {
         }
     }
 
-    fun getProcessorShownAs(): Flow<Int> = dataStore.data
+    fun getProcessorShownAs(): Flow<String> = dataStore.data
         .catch {
             if (it is IOException) {
                 emit(emptyPreferences())
@@ -65,10 +65,10 @@ class SettingsRepository(context: Context) {
             }
         }
         .map { preferences ->
-            return@map preferences[processorShownAs] ?: 0
+            return@map preferences[processorShownAs] ?: "Hardware"
         }
 
-    suspend fun setProcessorShownAs(value: Int) {
+    suspend fun setProcessorShownAs(value: String) {
         dataStore.edit { preferences ->
             preferences[processorShownAs] = value
         }
