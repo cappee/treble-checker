@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.cappee.treble.R
 import dev.cappee.treble.main.recycler.RecyclerViewAdapter
@@ -14,6 +15,8 @@ import dev.cappee.treble.main.MainViewModel
 import dev.cappee.treble.main.recycler.ItemDecoration
 
 class RootFragment : Fragment() {
+
+    private val viewModel: MainViewModel by activityViewModels()
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
@@ -24,9 +27,6 @@ class RootFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //Init ViewModel
-        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-
         //Init RecyclerView
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -35,6 +35,7 @@ class RootFragment : Fragment() {
 
         //Observe LiveData and update adapter
         viewModel.liveDataRoot.observe(viewLifecycleOwner, {
+            binding.progressBar.visibility = ProgressBar.INVISIBLE
             binding.recyclerView.adapter = RecyclerViewAdapter(context,
                 arrayOf(R.string.superuser, R.string.busybox),
                 arrayOf(

@@ -12,5 +12,10 @@
         <item name="md_corner_radius">16dp</item>
         <!--Theme customization-->
         <item name="colorControlActivated">?colorPrimary</item>
+        <item name="preferenceTheme">@style/Theme.TrebleChecker.Settings</item>
+    </style>
+
+    <style name="Theme.TrebleChecker.Settings" parent="PreferenceThemeOverlay">
+        <item name="android:tint">?colorPrimary</item>
     </style>
 </resources>

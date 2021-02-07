@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.cappee.treble.R
 import dev.cappee.treble.databinding.FragmentMainBinding
@@ -13,8 +14,9 @@ import dev.cappee.treble.main.MainViewModel
 import dev.cappee.treble.main.recycler.ItemDecoration
 import dev.cappee.treble.main.recycler.RecyclerViewAdapter
 
-
 class TrebleFragment : Fragment() {
+
+    private val viewModel: MainViewModel by activityViewModels()
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
@@ -25,9 +27,6 @@ class TrebleFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //Init ViewModel
-        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-
         //Init RecyclerView
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -36,6 +35,7 @@ class TrebleFragment : Fragment() {
 
         //Observe LiveData and update adapter
         viewModel.liveDataTreble.observe(viewLifecycleOwner, {
+            binding.progressBar.visibility = ProgressBar.INVISIBLE
             binding.recyclerView.adapter = RecyclerViewAdapter(
                 context,
                 arrayOf(

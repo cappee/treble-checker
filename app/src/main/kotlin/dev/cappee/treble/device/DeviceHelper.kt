@@ -12,9 +12,11 @@ import android.view.Display
 import android.view.WindowManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dev.cappee.treble.R
+import dev.cappee.treble.settings.SettingsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.first
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
@@ -28,8 +30,8 @@ object DeviceHelper {
     suspend fun get() = coroutineScope {
         async(Dispatchers.Default) { Device(
             identifier(),
-            batteryCapacityExperimental(),
-            cpu(),
+            batteryCapacity(),
+            cpu() as String,
             gpu,
             cpuArch(),
             totalRam(),
@@ -45,6 +47,7 @@ object DeviceHelper {
     @Suppress("DEPRECATION")
     fun init(context: Context) {
         applicationContext = context.applicationContext
+        settingsRepository = SettingsRepository(applicationContext)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             display = context.display ?: (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
             context.display?.getRealMetrics(displayMetrics)
@@ -58,23 +61,38 @@ object DeviceHelper {
     }
 
     private lateinit var applicationContext: Context
+    private lateinit var settingsRepository: SettingsRepository
 
-    private fun identifier() : String {
-        return Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
+    val possibleIdentifierOrder: List<CharSequence> = listOf(
+        "${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE})",
+        "${Build.MANUFACTURER} ${Build.DEVICE} (${Build.MODEL})",
+        "${Build.DEVICE} ${Build.MODEL} (${Build.MANUFACTURER})",
+        "${Build.MODEL} ${Build.DEVICE} (${Build.MANUFACTURER})",
+        "${Build.DEVICE} ${Build.MANUFACTURER} (${Build.MODEL})",
+        "${Build.MODEL} ${Build.MANUFACTURER} (${Build.DEVICE})"
+    )
+
+    private suspend fun identifier() : String {
+        return possibleIdentifierOrder[settingsRepository.getIdentifierOrder().first()] as String
     }
 
-    fun batteryCapacity(context: Context) : String {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
-            val chargeCounter = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
-            val capacity = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
-            return "~" + (((chargeCounter / 1000) * 100) / capacity).toString() + " mAh"
+    private suspend fun batteryCapacity() : String {
+        return if (!settingsRepository.getBatteryFetchModeExperimental().first()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                val batteryManager = applicationContext.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
+                val chargeCounter = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
+                val capacity = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+                "~" + (((chargeCounter / 1000) * 100) / capacity).toString() + " mAh"
+            } else {
+                applicationContext.getString(R.string.api_21_required)
+            }
+        } else {
+            batteryCapacityExperimental()
         }
-        return context.getString(R.string.api_21_required)
     }
 
     //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
-    private fun cpu() : String {
+    suspend fun cpu(list: Boolean? = null ?: false) : Any {
         val map: MutableMap<String, String> = HashMap()
         try {
             val scanner = Scanner(File("/proc/cpuinfo"))
@@ -83,12 +101,17 @@ object DeviceHelper {
                 if (split.size > 1) map[split[0].trim { it <= ' ' }] = split[1].trim { it <= ' ' }
             }
         } catch (e: FileNotFoundException) {
-            e.printStackTrace()
+            throw e
         }
-        return if (map["Hardware"] != null) {
-            map["Hardware"].toString()
+        val possibleCpu = mutableListOf(
+            map["Hardware"],
+            map["Processor"],
+            map["model name"]
+        )
+        return if (list!!) {
+            possibleCpu
         } else {
-            map["model name"].toString()
+            possibleCpu[settingsRepository.getProcessorShownAs().first()] ?: ""
         }
     }
 

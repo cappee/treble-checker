@@ -1,18 +1,16 @@
 package dev.cappee.treble.main
 
-import android.content.Context
+import android.content.Intent
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.list.ItemListener
 import com.afollestad.materialdialogs.list.listItems
 import com.google.android.material.tabs.TabLayout
@@ -22,6 +20,7 @@ import dev.cappee.treble.main.viewpager.ViewPagerAdapter
 import dev.cappee.treble.databinding.ActivityMainBinding
 import dev.cappee.treble.device.DeviceHelper
 import dev.cappee.treble.root.RootHelper
+import dev.cappee.treble.settings.SettingsActivity
 import dev.cappee.treble.treble.TrebleHelper
 import kotlinx.coroutines.*
 import javax.microedition.khronos.egl.EGLConfig
@@ -59,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             binding.root.addView(glSurfaceView)
         }
 
-        //Pass context needed to get display info
+        //Pass context to repository classes
         TrebleHelper.init(this@MainActivity)
         RootHelper.init(this@MainActivity)
         DeviceHelper.init(this@MainActivity)
@@ -78,9 +77,6 @@ class MainActivity : AppCompatActivity() {
                 2 -> tab.text = "Device"
             }
         }.attach()
-
-        //Hide progressbar
-        binding.progressBar.visibility = View.INVISIBLE
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -89,29 +85,25 @@ class MainActivity : AppCompatActivity() {
             menuDialog = MaterialDialog(this@MainActivity, BottomSheet(LayoutMode.WRAP_CONTENT))
             menuDialog.apply {
                 title(R.string.menu)
-                listItems(null,
-                    listOf(getText(R.string.tools), getText(R.string.about_us), getText(R.string.settings)),
-                    null,
-                    false,
-                    object : ItemListener {
+                var selection = -1
+                listItems(items = listOf(getText(R.string.tools), getText(R.string.settings)),
+                    selection = object : ItemListener {
                         override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
-                            when (index) {
-                                0 -> {
-                                    //TODO: Open tools activity
-                                    dismiss()
-                                }
-                                1 -> {
-                                    //TODO: Open about us activity
-                                    dismiss()
-                                }
-                                2 -> {
-                                    //TODO: Open settings activity
-                                    dismiss()
-                                }
-                            }
+                            selection = index
+                            dismiss()
                         }
                     }
                 )
+                onDismiss {
+                    when (selection) {
+                        0 -> {
+                            //TODO: Open tools activity
+                        }
+                        1 -> {
+                            startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+                        }
+                    }
+                }
             }
         }
         return super.onCreateOptionsMenu(menu)

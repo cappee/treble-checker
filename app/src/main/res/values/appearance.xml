@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Appearance.Toolbar.Title" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textSize">20sp</item>
         <item name="android:focusable">false</item>
         <item name="android:clickable">false</item>
         <item name="android:longClickable">false</item>
         <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="Appearance.Toolbar.Title.Expanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
+        <item name="android:textSize">48sp</item>
     </style>
 
     <style name="Appearance.Tab.Title" parent="TextAppearance.MaterialComponents.Button">

@@ -1,14 +1,13 @@
 package dev.cappee.treble.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
 import dev.cappee.treble.device.Device
 import dev.cappee.treble.device.DeviceHelper
 import dev.cappee.treble.root.Root
 import dev.cappee.treble.root.RootHelper
 import dev.cappee.treble.treble.Treble
 import dev.cappee.treble.treble.TrebleHelper
+import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 

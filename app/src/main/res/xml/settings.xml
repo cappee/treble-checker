@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/methods">
+
+        <Preference app:key="battery"
+            app:title="@string/battery"
+            app:icon="@drawable/ic_battery"
+            app:summary="@string/battery_summary"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/customization">
+
+        <Preference app:key="identifier"
+            app:title="@string/identifier"
+            app:icon="@drawable/ic_smartphone"
+            app:summary="@string/identifier_summary"/>
+
+        <Preference app:key="processor"
+            app:title="@string/processor"
+            app:icon="@drawable/ic_memory"
+            app:summary="@string/processor_summary"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/information">
+
+        <Preference app:key="github"
+            app:title="@string/github"
+            app:icon="@drawable/ic_github"
+            app:summary="@string/github_summary"/>
+
+        <Preference app:key="developer"
+            app:title="@string/developer"
+            app:icon="@drawable/ic_person"
+            app:summary="@string/developer_summary"/>
+
+        <Preference app:key="version"
+            app:title="@string/version"
+            app:icon="@drawable/ic_android"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

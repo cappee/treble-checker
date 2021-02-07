@@ -27,7 +27,7 @@
     <string name="general">Generale</string>
     <string name="chipset" translatable="false">Chipset</string>
     <string name="memory">Memoria</string>
-    <string name="identification">Identificativo</string>
+    <string name="identifier">Identificativo</string>
     <string name="display_resolution">Risoluzione</string>
     <string name="battery">Batteria</string>
     <string name="processor">Processore</string>
@@ -41,7 +41,7 @@
     <string name="dimensions">Dimensioni</string>
     <string name="refresh_rate">Frequenza di aggiornamento</string>
     <string name="android">Android</string>
-    <string name="version">Version</string>
+    <string name="version">Versione</string>
     <string name="security_patch">Patch di sicurezza</string>
     <string name="api_21_required">API >= 21 richiesto</string>
     <string name="api_18_required">API >= 18 richiesto</string>
@@ -65,6 +65,21 @@
     <string name="not_found">Non trovato</string>
     <string name="menu">Menu</string>
     <string name="settings">Impostazioni</string>
-    <string name="about_us">Su di noi</string>
     <string name="tools">Strumenti</string>
+    <string name="methods">Metodi</string>
+    <string name="customization">Personalizzazione</string>
+    <string name="battery_summary">Scegli la modalità con la quale ottenere informazioni sulla batteria. Tieni presente che la modalità sperimentale è più accurata ma potrebbe non funzionare su tutti i dispositivi (%s)</string>
+    <string name="classic">Classico</string>
+    <string name="experimental">Sperimentale</string>
+    <string-array name="battery_entries">
+        <item>@string/classic</item>
+        <item>@string/experimental</item>
+    </string-array>
+    <string name="information">Informazioni</string>
+    <string name="github">GitHub</string>
+    <string name="github_summary">Questo progetto è open-source: significa che il codice sorgente è visibile a tutti e che chiunque può contribuirvi.</string>
+    <string name="identifier_summary">Scegli in che ordine mostrare il modello del tuo dispositivo.\nEs. %s</string>
+    <string name="processor_summary">Scegli come mostrare il nome del processore del tuo dispositivo.\nEs. %s</string>
+    <string name="developer">Sviluppatore</string>
+    <string name="developer_summary">Gabriele Cappellaro</string>
 </resources>
