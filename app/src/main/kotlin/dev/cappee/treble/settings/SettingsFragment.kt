@@ -95,13 +95,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 onPreferenceClickListener = Preference.OnPreferenceClickListener {
                     MaterialDialog(context!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
                         title(R.string.processor)
+                        val items = viewModel.cpuEntries.values.toMutableList()
+                        items.removeIf { it.isEmpty() || it == "0" }
                         listItemsSingleChoice(
-                            items = viewModel.cpuEntries.values.toMutableList(),
+                            items = items,
                             initialSelection = DeviceHelper.getCpuIndexByString(value),
                             selection = object : SingleChoiceListener {
                                 override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
                                     dialog.dismiss()
-                                    viewModel.setProcessorShownAs(viewModel.cpuEntries.keys.elementAt(index))
+                                    viewModel.setProcessorShownAs(viewModel.cpuEntries.keys.elementAt(viewModel.cpuEntries.values.indexOf(text)))
                                 }
                             }
                         )

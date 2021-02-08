@@ -40,9 +40,7 @@
     <string name="dpi">DPI</string>
     <string name="dimensions">Dimensioni</string>
     <string name="refresh_rate">Frequenza di aggiornamento</string>
-    <string name="android">Android</string>
     <string name="version">Versione</string>
-    <string name="security_patch">Patch di sicurezza</string>
     <string name="api_21_required">API >= 21 richiesto</string>
     <string name="api_18_required">API >= 18 richiesto</string>
     <string name="not_mounted">Non montata</string>

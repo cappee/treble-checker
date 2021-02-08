@@ -31,7 +31,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var menuDialog: MaterialDialog
 
-    private val viewModel: MainViewModel by viewModels { MainViewModelFactory(TrebleHelper.init(this), RootHelper.init(this), DeviceHelper.init(this)) }
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModelFactory(TrebleHelper.init(this), RootHelper.init(this), DeviceHelper.init(this))
+    }
 
     private val coroutine = CoroutineScope(Dispatchers.Main + Job())
     private lateinit var binding: ActivityMainBinding
