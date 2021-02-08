@@ -19,7 +19,7 @@ import dev.cappee.treble.root.RootHelper
 
 class TrebleFragment : Fragment() {
 
-    private val viewModel: MainViewModel by activityViewModels { MainViewModelFactory(TrebleHelper.init(context!!), RootHelper.init(context!!), DeviceHelper.init(context!!)) }
+    private val viewModel: MainViewModel by activityViewModels()
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!

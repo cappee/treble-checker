@@ -1,10 +1,7 @@
 package dev.cappee.treble.settings
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import dev.cappee.treble.R
 import dev.cappee.treble.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
@@ -28,8 +25,6 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
     }
-
-
 
     override fun onBackPressed() {
         super.onBackPressed()

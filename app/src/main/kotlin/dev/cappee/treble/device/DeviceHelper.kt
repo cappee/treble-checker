@@ -28,6 +28,7 @@ import kotlin.math.sqrt
 object DeviceHelper {
 
     suspend fun get() = coroutineScope {
+        settingsRepository = SettingsRepository(applicationContext)
         async(Dispatchers.Default) { Device(
             identifier(),
             batteryCapacity(),
@@ -47,7 +48,6 @@ object DeviceHelper {
     @Suppress("DEPRECATION")
     fun init(context: Context) : DeviceHelper {
         applicationContext = context.applicationContext
-        settingsRepository = SettingsRepository(applicationContext)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             display = context.display ?: (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
             context.display?.getRealMetrics(displayMetrics)
