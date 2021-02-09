@@ -1,7 +1,15 @@
 package dev.cappee.treble.settings
 
+import android.content.ComponentName
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.browser.customtabs.CustomTabsClient
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.browser.customtabs.CustomTabsServiceConnection
+import androidx.browser.customtabs.CustomTabsSession
 import androidx.fragment.app.viewModels
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -27,6 +35,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private val viewModel: SettingsViewModel by viewModels {
         SettingsViewModelFactory(SettingsRepository(context!!))
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,7 +106,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     MaterialDialog(context!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
                         title(R.string.processor)
                         val items = viewModel.cpuEntries.values.toMutableList()
-                        items.removeIf { it.isEmpty() || it == "0" }
+                        if (Build.VERSION.SDK_INT >= 24)
+                            items.removeIf { it.isEmpty() }
                         listItemsSingleChoice(
                             items = items,
                             initialSelection = DeviceHelper.getCpuIndexByString(value),
@@ -114,5 +125,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         preferenceVersion.summary = viewModel.appVersion
+
+        preferenceGithub.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/cappee/treble-checker")))
+            return@OnPreferenceClickListener true
+        }
     }
 }

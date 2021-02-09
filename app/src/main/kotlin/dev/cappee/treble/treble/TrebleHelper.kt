@@ -32,7 +32,6 @@ object TrebleHelper {
     private lateinit var applicationContext: Context
 
     private fun trebleStatus() : String {
-        println("THREAD TREBLE: ${Thread.currentThread()}")
         val processTreble = Runtime.getRuntime().exec("getprop ro.treble.enabled")
         var treble: String = processTreble.inputStream.bufferedReader().use(BufferedReader::readText)
         if (treble.isNotBlank())

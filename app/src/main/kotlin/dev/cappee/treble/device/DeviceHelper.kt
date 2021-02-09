@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
@@ -102,7 +103,8 @@ object DeviceHelper {
     }
 
     //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
-    suspend fun cpu(list: Boolean? = null ?: false, value: String? = null) : Any {
+    fun cpu(list: Boolean? = null ?: false, value: String? = null) : Any {
+        settingsRepository = SettingsRepository(applicationContext)
         val map: MutableMap<String, String> = HashMap()
         try {
             val scanner = Scanner(File("/proc/cpuinfo"))
@@ -126,7 +128,7 @@ object DeviceHelper {
                 possibleCpuEntries[value] ?: ""
             }
             else -> {
-                possibleCpuEntries[settingsRepository.getProcessorShownAs().first()] ?: applicationContext.getString(R.string.error_report_this_please)
+                possibleCpuEntries[runBlocking { settingsRepository.getProcessorShownAs().first() }] ?: applicationContext.getString(R.string.error_report_this_please)
             }
         }
     }
@@ -222,7 +224,7 @@ object DeviceHelper {
     //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
     private fun displayResolution(): String {
         val resolution = "${displayMetrics.heightPixels}x${displayMetrics.widthPixels}"
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        return if (Build.VERSION.SDK_INT >= 24) {
             if (display.isHdr) {
                 when {
                     display.hdrCapabilities.supportedHdrTypes.contains(Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS) -> {
@@ -250,13 +252,17 @@ object DeviceHelper {
 
     //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
     private fun displayRefreshRate() : String {
-        var refreshRate: Float = display.supportedModes[0].refreshRate
-        for (mode in display.supportedModes) {
-            if (mode.refreshRate > refreshRate) {
-                refreshRate = mode.refreshRate
+        return if (Build.VERSION.SDK_INT >= 23) {
+            var refreshRate: Float = display.supportedModes[0].refreshRate
+            for (mode in display.supportedModes) {
+                if (mode.refreshRate > refreshRate) {
+                    refreshRate = mode.refreshRate
+                }
             }
+            "${refreshRate.roundToInt()} Hz"
+        } else {
+            "${display.refreshRate.roundToInt()} Hz"
         }
-        return "${refreshRate.roundToInt()} Hz"
     }
 
     private fun batteryCapacityExperimental() : String {
@@ -272,7 +278,7 @@ object DeviceHelper {
             batteryCapacity = Class.forName("com.android.internal.os.PowerProfile")
                 .getMethod("getAveragePower", String::class.java)
                 .invoke(powerProfile, "battery.capacity") as Double
-            "$batteryCapacity mAh"
+            "${batteryCapacity.roundToInt()} mAh"
         } catch (e: Exception) {
             applicationContext.getString(R.string.not_found)
         }
