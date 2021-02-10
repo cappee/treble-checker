@@ -10,12 +10,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.cappee.treble.R
 import dev.cappee.treble.databinding.FragmentMainBinding
-import dev.cappee.treble.device.DeviceHelper
 import dev.cappee.treble.main.MainViewModel
-import dev.cappee.treble.main.MainViewModelFactory
 import dev.cappee.treble.main.recycler.ItemDecoration
 import dev.cappee.treble.main.recycler.RecyclerViewAdapter
-import dev.cappee.treble.root.RootHelper
+import dev.cappee.treble.model.Data
 
 class TrebleFragment : Fragment() {
 
@@ -41,25 +39,22 @@ class TrebleFragment : Fragment() {
             binding.progressBar.visibility = ProgressBar.INVISIBLE
             binding.recyclerView.adapter = RecyclerViewAdapter(
                 context,
-                arrayOf(
-                    R.string.project_treble,
-                    R.string.a_b_partitioning,
-                    R.string.system_as_root
-                ),
-                arrayOf(
-                    arrayOf(R.string.status, R.string.treble_arch, R.string.vndk_version),
-                    arrayOf(R.string.status, R.string.seamless_updates),
-                    arrayOf(R.string.status, R.string.method)
-                ),
-                arrayOf(
-                    arrayOf(it.trebleStatus, it.trebleArch, it.vndkVersion),
-                    arrayOf(it.abStatus, it.seamlessUpdate),
-                    arrayOf(it.sarStatus, it.sarMethod)
-                ),
-                arrayOf(
-                    Pair(R.string.project_treble, R.string.project_treble_description),
-                    Pair(R.string.a_b_partitioning, R.string.a_b_partitioning_description),
-                    Pair(R.string.system_as_root, R.string.system_as_root_description)
+                mutableListOf(
+                    Data(
+                        R.string.project_treble,
+                        arrayOf(R.string.status, R.string.treble_arch, R.string.vndk_version),
+                        arrayOf(it.trebleStatus, it.trebleArch, it.vndkVersion),
+                        Pair(R.string.project_treble, R.string.project_treble_description)),
+                    Data(
+                        R.string.a_b_partitioning,
+                        arrayOf(R.string.status, R.string.seamless_updates),
+                        arrayOf(it.abStatus, it.seamlessUpdate),
+                        Pair(R.string.a_b_partitioning, R.string.a_b_partitioning_description)),
+                    Data(
+                        R.string.system_as_root,
+                        arrayOf(R.string.status, R.string.method),
+                        arrayOf(it.sarStatus, it.sarMethod),
+                        Pair(R.string.system_as_root, R.string.system_as_root_description))
                 )
             )
         })

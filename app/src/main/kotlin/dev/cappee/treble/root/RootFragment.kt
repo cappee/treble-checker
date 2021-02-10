@@ -13,6 +13,7 @@ import dev.cappee.treble.main.recycler.RecyclerViewAdapter
 import dev.cappee.treble.databinding.FragmentMainBinding
 import dev.cappee.treble.main.MainViewModel
 import dev.cappee.treble.main.recycler.ItemDecoration
+import dev.cappee.treble.model.Data
 
 class RootFragment : Fragment() {
 
@@ -36,17 +37,21 @@ class RootFragment : Fragment() {
         //Observe LiveData and update adapter
         viewModel.liveDataRoot.observe(viewLifecycleOwner, {
             binding.progressBar.visibility = ProgressBar.INVISIBLE
-            binding.recyclerView.adapter = RecyclerViewAdapter(context,
-                arrayOf(R.string.superuser, R.string.busybox),
-                arrayOf(
-                    arrayOf(R.string.root_permissions, R.string.root_path),
-                    arrayOf(R.string.status, R.string.build_date)),
-                arrayOf(
-                    arrayOf(it.rootPermissions, it.rootPath),
-                    arrayOf(it.busyBoxStatus, it.busyBoxBuildDate)),
-                arrayOf(
-                    Pair(R.string.superuser, R.string.superuser_description),
-                    Pair(R.string.busybox, R.string.busybox_description)))
+            binding.recyclerView.adapter = RecyclerViewAdapter(
+                context,
+                mutableListOf(
+                    Data(
+                        R.string.superuser,
+                        arrayOf(R.string.root_permissions, R.string.root_path),
+                        arrayOf(it.rootPermissions, it.rootPath),
+                        Pair(R.string.superuser, R.string.superuser_description)),
+                    Data(
+                        R.string.busybox,
+                        arrayOf(R.string.status, R.string.build_date),
+                        arrayOf(it.busyBoxStatus, it.busyBoxBuildDate),
+                        Pair(R.string.busybox, R.string.busybox_description))
+                )
+            )
         })
     }
 

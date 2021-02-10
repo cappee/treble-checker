@@ -12,8 +12,8 @@ import dev.cappee.treble.R
 import dev.cappee.treble.main.recycler.RecyclerViewAdapter
 import dev.cappee.treble.databinding.FragmentMainBinding
 import dev.cappee.treble.main.MainViewModel
-import dev.cappee.treble.main.MainViewModelFactory
 import dev.cappee.treble.main.recycler.ItemDecoration
+import dev.cappee.treble.model.Data
 
 class DeviceFragment : Fragment() {
 
@@ -37,19 +37,31 @@ class DeviceFragment : Fragment() {
         //Observe LiveData and update adapter
         viewModel.liveDataDevice.observe(viewLifecycleOwner, {
             binding.progressBar.visibility = ProgressBar.INVISIBLE
-            binding.recyclerView.adapter = RecyclerViewAdapter(context,
-                arrayOf(R.string.general, R.string.chipset, R.string.memory, R.string.display),
-                arrayOf(
-                    arrayOf(R.string.identifier, R.string.battery),
-                    arrayOf(R.string.processor, R.string.graphic_card, R.string.architecture),
-                    arrayOf(R.string.ram, R.string.intenal_memory, R.string.external_memory),
-                    arrayOf(R.string.dimensions, R.string.display_resolution, R.string.dpi, R.string.refresh_rate)),
-                arrayOf(
-                    arrayOf(it.identifier, it.battery),
-                    arrayOf(it.cpu, it.gpu, it.arch),
-                    arrayOf(it.ram, it.internalMemory, it.externalMemory),
-                    arrayOf(it.screenSize, it.screenResolution, it.dpi, it.refreshRate)),
-                emptyArray())
+            binding.recyclerView.adapter = RecyclerViewAdapter(
+                context,
+                mutableListOf(
+                    Data(
+                        R.string.general,
+                        arrayOf(R.string.identifier, R.string.battery),
+                        arrayOf(it.identifier, it.battery),
+                        null),
+                    Data(
+                        R.string.chipset,
+                        arrayOf(R.string.processor, R.string.graphic_card, R.string.architecture),
+                        arrayOf(it.cpu, it.gpu, it.arch),
+                        null),
+                    Data(
+                        R.string.memory,
+                        arrayOf(R.string.ram, R.string.intenal_memory, R.string.external_memory),
+                        arrayOf(it.ram, it.internalMemory, it.externalMemory),
+                        null),
+                    Data(
+                        R.string.display,
+                        arrayOf(R.string.dimensions, R.string.display_resolution, R.string.dpi, R.string.refresh_rate),
+                        arrayOf(it.screenSize, it.screenResolution, it.dpi, it.refreshRate),
+                        null)
+                )
+            )
         })
     }
 

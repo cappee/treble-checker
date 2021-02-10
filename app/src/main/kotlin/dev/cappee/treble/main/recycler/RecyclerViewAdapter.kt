@@ -8,84 +8,102 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
-import dev.cappee.treble.R
+import dev.cappee.treble.databinding.LayoutAdsBinding
 import dev.cappee.treble.databinding.LayoutRecyclerBinding
+import dev.cappee.treble.model.Data
 
-class RecyclerViewAdapter(private val context: Context?, private val titles: Array<Int>, private val allSubtitles: Array<Array<Int>>, private val allData: Array<Array<String>>, private val allButtons: Array<Pair<Int, Int>>?) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+class RecyclerViewAdapter(
+    private val context: Context?,
+    private val dataSets: MutableList<Any>
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(val binding: LayoutRecyclerBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    inner class AdsViewHolder(val binding: LayoutAdsBinding) : RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == 1) {
+            AdsViewHolder(LayoutAdsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        } else {
+            ViewHolder(LayoutRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(holder) {
-            binding.textViewTitle.text = context?.getString(titles[position])
-            val subtitles : Array<Int> = allSubtitles[position]
-            val data : Array<String> = allData[position]
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is AdsViewHolder) { with(holder) {
+            //binding
+        } } else if (holder is ViewHolder) { with(holder.binding) {
+            val data = dataSets[position] as Data
+            textViewTitle.text = context?.getString(data.title)
 
-            when (subtitles.size) {
+            when (data.values.size) {
                 4 -> {
-                    binding.textViewDescriptionFirst.text = context?.getString(subtitles[0])
-                    binding.textViewFirst.text = data[0]
-                    binding.textViewDescriptionSecond.text = context?.getString(subtitles[1])
-                    binding.textViewSecond.text = data[1]
-                    binding.textViewDescriptionThird.text = context?.getString(subtitles[2])
-                    binding.textViewThird.text = data[2]
-                    binding.textViewDescriptionFourth.text = context?.getString(subtitles[3])
-                    binding.textViewFourth.text = data[3]
+                    textViewDescriptionFirst.text = context?.getString(data.descriptions[0])
+                    textViewFirst.text = data.values[0]
+                    textViewDescriptionSecond.text = context?.getString(data.descriptions[1])
+                    textViewSecond.text = data.values[1]
+                    textViewDescriptionThird.text = context?.getString(data.descriptions[2])
+                    textViewThird.text = data.values[2]
+                    textViewDescriptionFourth.text = context?.getString(data.descriptions[3])
+                    textViewFourth.text = data.values[3]
                 }
                 3 -> {
-                    binding.textViewDescriptionFourth.visibility = MaterialTextView.GONE
-                    binding.textViewFourth.visibility = MaterialTextView.GONE
-                    binding.textViewDescriptionFirst.text = context?.getString(subtitles[0])
-                    binding.textViewFirst.text = data[0]
-                    binding.textViewDescriptionSecond.text = context?.getString(subtitles[1])
-                    binding.textViewSecond.text = data[1]
-                    binding.textViewDescriptionThird.text = context?.getString(subtitles[2])
-                    binding.textViewThird.text = data[2]
+                    textViewDescriptionFourth.visibility = MaterialTextView.GONE
+                    textViewFourth.visibility = MaterialTextView.GONE
+                    textViewDescriptionFirst.text = context?.getString(data.descriptions[0])
+                    textViewFirst.text = data.values[0]
+                    textViewDescriptionSecond.text = context?.getString(data.descriptions[1])
+                    textViewSecond.text = data.values[1]
+                    textViewDescriptionThird.text = context?.getString(data.descriptions[2])
+                    textViewThird.text = data.values[2]
                 }
                 2 -> {
-                    binding.textViewDescriptionFourth.visibility = MaterialTextView.GONE
-                    binding.textViewFourth.visibility = MaterialTextView.GONE
-                    binding.textViewDescriptionThird.visibility = MaterialTextView.GONE
-                    binding.textViewThird.visibility = MaterialTextView.GONE
-                    binding.textViewDescriptionFirst.text = context?.getString(subtitles[0])
-                    binding.textViewFirst.text = data[0]
-                    binding.textViewDescriptionSecond.text = context?.getString(subtitles[1])
-                    binding.textViewSecond.text = data[1]
+                    textViewDescriptionFourth.visibility = MaterialTextView.GONE
+                    textViewFourth.visibility = MaterialTextView.GONE
+                    textViewDescriptionThird.visibility = MaterialTextView.GONE
+                    textViewThird.visibility = MaterialTextView.GONE
+                    textViewDescriptionFirst.text = context?.getString(data.descriptions[0])
+                    textViewFirst.text = data.values[0]
+                    textViewDescriptionSecond.text = context?.getString(data.descriptions[1])
+                    textViewSecond.text = data.values[1]
                 }
                 1 -> {
-                    binding.textViewDescriptionFourth.visibility = MaterialTextView.GONE
-                    binding.textViewFourth.visibility = MaterialTextView.GONE
-                    binding.textViewDescriptionThird.visibility = MaterialTextView.GONE
-                    binding.textViewThird.visibility = MaterialTextView.GONE
-                    binding.textViewDescriptionSecond.visibility = MaterialTextView.GONE
-                    binding.textViewSecond.visibility = MaterialTextView.GONE
-                    binding.textViewDescriptionFirst.text = context?.getString(subtitles[0])
-                    binding.textViewFirst.text = data[0]
+                    textViewDescriptionFourth.visibility = MaterialTextView.GONE
+                    textViewFourth.visibility = MaterialTextView.GONE
+                    textViewDescriptionThird.visibility = MaterialTextView.GONE
+                    textViewThird.visibility = MaterialTextView.GONE
+                    textViewDescriptionSecond.visibility = MaterialTextView.GONE
+                    textViewSecond.visibility = MaterialTextView.GONE
+                    textViewDescriptionFirst.text = context?.getString(data.descriptions[0])
+                    textViewFirst.text = data.values[0]
                 }
             }
-            if (!allButtons.isNullOrEmpty()) {
-                with(allButtons[position]) {
-                    binding.buttonMoreInfo.setOnClickListener {
-                        if (context != null) {
-                            MaterialDialog(context, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
-                                title(first)
-                                message(second)
-                            }
+            if (data.button != null) {
+                buttonMoreInfo.setOnClickListener {
+                    if (context != null) {
+                        MaterialDialog(context, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+                            title(data.button.first)
+                            message(data.button.second)
                         }
                     }
                 }
             } else {
-                binding.buttonMoreInfo.visibility = MaterialButton.GONE
-            }
+                buttonMoreInfo.visibility = MaterialButton.GONE
+            } }
         }
     }
 
     override fun getItemCount(): Int {
-        return allSubtitles.size
+        return dataSets.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        /*return if (position == 1) {
+            1
+        } else {
+            0
+        }*/
+        return 0
     }
 
 }
