@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.gms.ads.nativead.NativeAdView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ad_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/ad_icon"
+            android:layout_width="64dp"
+            android:layout_height="72dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/ad_headline"
+            style="@style/Appearance.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/ad_store_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ad_icon"
+            app:layout_constraintTop_toTopOf="@+id/ad_icon"
+            tools:text="Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/ad_store_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/ad_icon"
+            app:layout_constraintStart_toStartOf="@+id/ad_headline"
+            app:layout_constraintTop_toBottomOf="@+id/ad_headline"
+            tools:text="Google Play | 0,99€" />
+
+        <androidx.appcompat.widget.AppCompatRatingBar
+            android:id="@+id/ad_rating"
+            style="?android:attr/ratingBarStyleSmall"
+            android:theme="@style/Widget.RatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            app:layout_constraintBottom_toBottomOf="@+id/ad_store_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/ad_store_price"
+            app:layout_constraintTop_toTopOf="@+id/ad_store_price"
+            tools:rating="4"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/ad_body"
+            style="@style/Appearance.Body.Darker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ad_icon"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut laboLorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labo" />
+
+        <com.google.android.gms.ads.nativead.MediaView
+            android:id="@+id/ad_media_view"
+            android:layout_width="250dp"
+            android:layout_height="175dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ad_body" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ad_click"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ad_media_view" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.gms.ads.nativead.NativeAdView>

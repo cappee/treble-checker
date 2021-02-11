@@ -14,6 +14,8 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.list.ItemListener
 import com.afollestad.materialdialogs.list.listItems
+import com.google.android.gms.ads.*
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dev.cappee.treble.R
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var menuDialog: MaterialDialog
 
     private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory(TrebleHelper.init(this), RootHelper.init(this), DeviceHelper.init(this))
+        MainViewModelFactory(applicationContext, TrebleHelper.init(this), RootHelper.init(this), DeviceHelper.init(this))
     }
 
     private val coroutine = CoroutineScope(Dispatchers.Main + Job())
@@ -45,6 +47,12 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         coroutine.launch {
+            //Init AdMob SDK
+            launch {
+                MobileAds.initialize(this@MainActivity)
+                viewModel.getNativeAds()
+            }
+
             //Running GPU stuff
             val glSurfaceView = GLSurfaceView(this@MainActivity)
             glSurfaceView.apply {
@@ -62,7 +70,6 @@ class MainActivity : AppCompatActivity() {
             }
             binding.root.addView(glSurfaceView)
         }
-        //Pass context to repository classes
 
         //Init ViewPager
         binding.viewPager.apply {
@@ -98,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                 onDismiss {
                     when (selection) {
                         0 -> {
-                            //TODO: Open tools activity
+                            Snackbar.make(binding.root, R.string.available_in_next_updates, Snackbar.LENGTH_SHORT).show()
                         }
                         1 -> {
                             startActivity(Intent(this@MainActivity, SettingsActivity::class.java))

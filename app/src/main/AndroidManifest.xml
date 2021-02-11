@@ -23,5 +23,8 @@
         <activity android:name=".settings.SettingsActivity"
             android:label="@string/settings"
             android:screenOrientation="portrait"/>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2954582391475229~6777919315"/>
     </application>
 </manifest>

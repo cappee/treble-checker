@@ -31,8 +31,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         SettingsViewModelFactory(SettingsRepository(context!!))
     }
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         listView.overScrollMode = RecyclerView.OVER_SCROLL_NEVER

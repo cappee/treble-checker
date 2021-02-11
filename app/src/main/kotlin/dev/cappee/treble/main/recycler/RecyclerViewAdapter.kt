@@ -6,34 +6,42 @@ import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
-import dev.cappee.treble.databinding.LayoutAdsBinding
 import dev.cappee.treble.databinding.LayoutRecyclerBinding
 import dev.cappee.treble.model.Data
 
 class RecyclerViewAdapter(
     private val context: Context?,
-    private val dataSets: MutableList<Any>
+    private val dataSet: MutableList<Any>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(val binding: LayoutRecyclerBinding) : RecyclerView.ViewHolder(binding.root)
 
-    inner class AdsViewHolder(val binding: LayoutAdsBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class AdsViewHolder(val binding: LayoutRecyclerBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == 1) {
-            AdsViewHolder(LayoutAdsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            AdsViewHolder(LayoutRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         } else {
             ViewHolder(LayoutRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is AdsViewHolder) { with(holder) {
-            //binding
+        if (holder is AdsViewHolder) { with(holder.binding) {
+            val adView = dataSet[position] as NativeAdView
+
+            if (root.childCount > 0) {
+                root.removeAllViews()
+            }
+            if (adView.parent != null) {
+                (adView.parent as ViewGroup).removeView(adView)
+            }
+            root.addView(adView)
         } } else if (holder is ViewHolder) { with(holder.binding) {
-            val data = dataSets[position] as Data
+            val data = dataSet[position] as Data
             textViewTitle.text = context?.getString(data.title)
 
             when (data.values.size) {
@@ -94,16 +102,15 @@ class RecyclerViewAdapter(
     }
 
     override fun getItemCount(): Int {
-        return dataSets.size
+        return dataSet.size
     }
 
     override fun getItemViewType(position: Int): Int {
-        /*return if (position == 1) {
+        return if (dataSet[position] is NativeAdView) {
             1
         } else {
             0
-        }*/
-        return 0
+        }
     }
 
 }

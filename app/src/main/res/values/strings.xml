@@ -81,4 +81,5 @@
     <string name="developer">Sviluppatore</string>
     <string name="developer_summary">Gabriele Cappellaro</string>
     <string name="error_report_this_please">Errore! Segnala questo bug, per favore</string>
+    <string name="available_in_next_updates">Questa funzione non è ancora disponibile ma lo sarà in un update futuro. Rimani aggiornato!</string>
 </resources>

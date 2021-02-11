@@ -13,6 +13,9 @@
         <!--Theme customization-->
         <item name="colorControlActivated">?colorPrimary</item>
         <item name="preferenceTheme">@style/Theme.TrebleChecker.Settings</item>
+        <item name="snackbarStyle">@style/Widget.Snackbar</item>
+        <item name="snackbarTextViewStyle">@style/Widget.Snackbar.Text</item>
+        <item name="snackbarButtonStyle">@style/Widget.Snackbar.Button</item>
     </style>
 
     <style name="Theme.TrebleChecker.Settings" parent="PreferenceThemeOverlay">

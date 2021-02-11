@@ -30,4 +30,21 @@
         <item name="cardElevation">2dp</item>
         <item name="cardPreventCornerOverlap">true</item>
     </style>
+
+    <style name="Widget.RatingBar" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="colorControlActivated">#FFD700</item>
+    </style>
+
+    <style name="Widget.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="backgroundTint">?colorSurface</item>
+        <item name="actionTextColorAlpha">1</item>
+    </style>
+
+    <style name="Widget.Snackbar.Text" parent="Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="Widget.Snackbar.Button" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
 </resources>
