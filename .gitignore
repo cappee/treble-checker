@@ -4,6 +4,7 @@
 #Android
 *.jks
 *.apk
+/app/release/output-metadata.json
 
 #Firebase
 google-services.json
@@ -13,5 +14,6 @@ google-services.json
 .gradle
 /local.properties
 /.idea
+/app/build
 /build
 /captures
