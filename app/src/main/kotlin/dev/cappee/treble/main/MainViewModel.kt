@@ -2,9 +2,7 @@ package dev.cappee.treble.main
 
 import android.content.Context
 import androidx.lifecycle.*
-import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.*
 import com.google.android.gms.ads.nativead.NativeAd
 import dev.cappee.treble.device.Device
 import dev.cappee.treble.device.DeviceHelper
@@ -63,31 +61,35 @@ class MainViewModel(
 
     fun getNativeAds() {
         var index = 0
-        AdLoader.Builder(applicationContext, "ca-app-pub-2954582391475229/6394775935")
-            .forNativeAd {
-                when(index) {
-                    0 -> {
-                        viewModelScope.launch {
+        viewModelScope.launch {
+            AdLoader.Builder(applicationContext, "ca-app-pub-2954582391475229/4977892104")
+                .forNativeAd {
+                    when(index) {
+                        0 -> {
                             mutableLiveDataNativeAdTreble.postValue(it)
                             index += 1
                         }
-                    }
-                    1 -> {
-                        viewModelScope.launch {
+                        1 -> {
                             mutableLiveDataNativeAdRoot.postValue(it)
                             index += 1
                         }
-                    }
-                    2 -> {
-                        viewModelScope.launch {
+                        2 -> {
                             mutableLiveDataNativeAdDevice.postValue(it)
                             index += 1
                         }
                     }
                 }
-            }
-            .build()
-            .loadAds(AdRequest.Builder().build(), 3)
+                .withAdListener(object : AdListener() {
+                    override fun onAdFailedToLoad(loadAdError: LoadAdError?) {
+                        super.onAdFailedToLoad(loadAdError)
+                        println(loadAdError?.cause)
+                        println(loadAdError?.message)
+                        println(loadAdError?.domain)
+                    }
+                })
+                .build()
+                .loadAds(AdRequest.Builder().build(), 3)
+        }
     }
 
 }

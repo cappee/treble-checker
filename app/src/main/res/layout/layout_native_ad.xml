@@ -15,6 +15,9 @@
             android:id="@+id/ad_icon"
             android:layout_width="64dp"
             android:layout_height="72dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/ad_headline"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
@@ -24,7 +27,6 @@
             style="@style/Appearance.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             app:layout_constraintBottom_toTopOf="@+id/ad_store_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -44,34 +46,34 @@
         <androidx.appcompat.widget.AppCompatRatingBar
             android:id="@+id/ad_rating"
             style="?android:attr/ratingBarStyleSmall"
-            android:theme="@style/Widget.RatingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:isIndicator="true"
             android:numStars="5"
+            android:theme="@style/Widget.RatingBar"
             app:layout_constraintBottom_toBottomOf="@+id/ad_store_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/ad_store_price"
             app:layout_constraintTop_toTopOf="@+id/ad_store_price"
-            tools:rating="4"/>
+            tools:rating="4" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/ad_body"
             style="@style/Appearance.Body.Darker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ad_icon"
+            app:layout_constraintTop_toBottomOf="@+id/ad_store_price"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut laboLorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labo" />
 
         <com.google.android.gms.ads.nativead.MediaView
             android:id="@+id/ad_media_view"
             android:layout_width="250dp"
-            android:layout_height="175dp"
+            android:layout_height="100dp"
             android:layout_marginTop="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

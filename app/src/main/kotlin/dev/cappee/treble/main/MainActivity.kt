@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         coroutine.launch {
             //Init AdMob SDK
-            launch {
+            launch(Dispatchers.Default) {
                 MobileAds.initialize(this@MainActivity)
                 viewModel.getNativeAds()
             }

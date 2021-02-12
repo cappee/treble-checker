@@ -82,4 +82,11 @@
     <string name="developer_summary">Gabriele Cappellaro</string>
     <string name="error_report_this_please">Errore! Segnala questo bug, per favore</string>
     <string name="available_in_next_updates">Questa funzione non è ancora disponibile ma lo sarà in un update futuro. Rimani aggiornato!</string>
+    <string name="contact_us">Contattaci</string>
+    <string name="contact_us_summary">Se riscontri un problema e vuoi segnalarcelo, oppure se vuoi suggerirci qualcosa da aggiungere, puoi farlo direttamente da qui.</string>
+    <string name="contact_us_message">Scrivi qua sotto quello che vuoi comunicarci (che sia un problema che hai riscontrato o una funzione che vorresti venisse aggiunta). Ricorda, ogni segnalazione è anonima nel pieno rispetto della tua privacy.</string>
+    <string name="contact_us_hint">Scrivi qui il tuo messaggio…</string>
+    <string name="email">E-mail</string>
+    <string name="bug">Problema</string>
+    <string name="feature_request">Suggerimento</string>
 </resources>

@@ -6,23 +6,36 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.input.InputCallback
+import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.SingleChoiceListener
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import dev.cappee.treble.BuildConfig
 import dev.cappee.treble.R
 import dev.cappee.treble.device.DeviceHelper
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
+    private val database by lazy { Firebase.firestore }
+
+    private lateinit var menuContactUs: MaterialDialog
+
     private lateinit var preferenceBattery: Preference
     private lateinit var preferenceIdentifier: Preference
     private lateinit var preferenceProcessor: Preference
+    private lateinit var preferenceContactUs: Preference
     private lateinit var preferenceGithub: Preference
     private lateinit var preferenceDeveloper: Preference
     private lateinit var preferenceVersion: Preference
@@ -43,9 +56,28 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceBattery = findPreference("battery")!!
         preferenceIdentifier = findPreference("identifier")!!
         preferenceProcessor = findPreference("processor")!!
+        preferenceContactUs = findPreference("contact_us")!!
         preferenceGithub = findPreference("github")!!
         preferenceDeveloper = findPreference("developer")!!
         preferenceVersion = findPreference("version")!!
+
+        lifecycleScope.launch {
+            menuContactUs = MaterialDialog(context!!).apply {
+                title(res = R.string.contact_us)
+                message(res = R.string.contact_us_message)
+                input(hintRes = R.string.contact_us_hint, allowEmpty = false, maxLength = 150, waitForPositiveButton = true, callback = object : InputCallback {
+                    override fun invoke(dialog: MaterialDialog, text: CharSequence) {
+                        database.collection("reports")
+                            .add(hashMapOf(
+                                "message" to text.toString(),
+                                "timestamp" to FieldValue.serverTimestamp(),
+                                "android_version" to Build.VERSION.SDK_INT,
+                                "app_version" to "${BuildConfig.VERSION_CODE}/${BuildConfig.VERSION_NAME}"
+                            ))
+                    }
+                })
+            }
+        }
 
         viewModel.liveDataBatteryMode.observeForever { value ->
             preferenceBattery.apply {
@@ -121,6 +153,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         preferenceGithub.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/cappee/treble-checker")))
+            return@OnPreferenceClickListener true
+        }
+
+        preferenceContactUs.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            menuContactUs.show()
             return@OnPreferenceClickListener true
         }
     }

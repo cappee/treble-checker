@@ -66,8 +66,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:25.12.0"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.android.gms:play-services-ads:19.7.0")
 
     implementation("com.afollestad.material-dialogs:core:3.3.0")
     implementation("com.afollestad.material-dialogs:bottomsheets:3.3.0")
+    implementation("com.afollestad.material-dialogs:input:3.3.0")
 }
