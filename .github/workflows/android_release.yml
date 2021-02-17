@@ -8,7 +8,7 @@ on:
 
 jobs:
   apk:
-    name: Build debug APK (and upload)
+    name: Build release APK (and upload)
     if: "contains(github.event.head_commit.message, '📦')"
     runs-on: ubuntu-latest
 
@@ -22,11 +22,11 @@ jobs:
         env:
           GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
         run: echo $GOOGLE_SERVICES > app/google-services.json
-      - name: 📦 Build debug APK
+      - name: 📦 Build release APK
         run: bash ./gradlew assembleRelease
       - name: 🚀 Upload APK
         uses: actions/upload-artifact@v2
         with:
           name: app
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
           retention-days: 7
