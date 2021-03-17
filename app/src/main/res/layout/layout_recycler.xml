@@ -18,7 +18,7 @@
             style="@style/Appearance.Title"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewDescriptionFirst"
+            android:id="@+id/textViewDescription1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -27,7 +27,7 @@
             style="@style/Appearance.Body"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewFirst"
+            android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -35,7 +35,7 @@
             style="@style/Appearance.Body.Darker"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewDescriptionSecond"
+            android:id="@+id/textViewDescription2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -44,7 +44,7 @@
             style="@style/Appearance.Body"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewSecond"
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -52,7 +52,7 @@
             style="@style/Appearance.Body.Darker"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewDescriptionThird"
+            android:id="@+id/textViewDescription3"
             style="@style/Appearance.Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             android:layout_marginEnd="4dp" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewThird"
+            android:id="@+id/textView3"
             style="@style/Appearance.Body.Darker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
             android:layout_marginEnd="4dp" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewDescriptionFourth"
+            android:id="@+id/textViewDescription4"
             style="@style/Appearance.Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
             android:layout_marginEnd="4dp" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewFourth"
+            android:id="@+id/textView4"
             style="@style/Appearance.Body.Darker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

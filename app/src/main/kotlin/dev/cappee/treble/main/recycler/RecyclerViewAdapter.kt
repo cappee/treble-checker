@@ -1,7 +1,8 @@
 package dev.cappee.treble.main.recycler
 
 import android.content.Context
-import android.view.*
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
@@ -46,44 +47,44 @@ class RecyclerViewAdapter(
 
             when (data.values.size) {
                 4 -> {
-                    textViewDescriptionFirst.text = context?.getString(data.descriptions[0])
-                    textViewFirst.text = data.values[0]
-                    textViewDescriptionSecond.text = context?.getString(data.descriptions[1])
-                    textViewSecond.text = data.values[1]
-                    textViewDescriptionThird.text = context?.getString(data.descriptions[2])
-                    textViewThird.text = data.values[2]
-                    textViewDescriptionFourth.text = context?.getString(data.descriptions[3])
-                    textViewFourth.text = data.values[3]
+                    textViewDescription1.text = context?.getString(data.descriptions[0])
+                    textView1.text = data.values[0]
+                    textViewDescription2.text = context?.getString(data.descriptions[1])
+                    textView2.text = data.values[1]
+                    textViewDescription3.text = context?.getString(data.descriptions[2])
+                    textView3.text = data.values[2]
+                    textViewDescription4.text = context?.getString(data.descriptions[3])
+                    textView4.text = data.values[3]
                 }
                 3 -> {
-                    textViewDescriptionFourth.visibility = MaterialTextView.GONE
-                    textViewFourth.visibility = MaterialTextView.GONE
-                    textViewDescriptionFirst.text = context?.getString(data.descriptions[0])
-                    textViewFirst.text = data.values[0]
-                    textViewDescriptionSecond.text = context?.getString(data.descriptions[1])
-                    textViewSecond.text = data.values[1]
-                    textViewDescriptionThird.text = context?.getString(data.descriptions[2])
-                    textViewThird.text = data.values[2]
+                    textViewDescription4.visibility = MaterialTextView.GONE
+                    textView4.visibility = MaterialTextView.GONE
+                    textViewDescription1.text = context?.getString(data.descriptions[0])
+                    textView1.text = data.values[0]
+                    textViewDescription2.text = context?.getString(data.descriptions[1])
+                    textView2.text = data.values[1]
+                    textViewDescription3.text = context?.getString(data.descriptions[2])
+                    textView3.text = data.values[2]
                 }
                 2 -> {
-                    textViewDescriptionFourth.visibility = MaterialTextView.GONE
-                    textViewFourth.visibility = MaterialTextView.GONE
-                    textViewDescriptionThird.visibility = MaterialTextView.GONE
-                    textViewThird.visibility = MaterialTextView.GONE
-                    textViewDescriptionFirst.text = context?.getString(data.descriptions[0])
-                    textViewFirst.text = data.values[0]
-                    textViewDescriptionSecond.text = context?.getString(data.descriptions[1])
-                    textViewSecond.text = data.values[1]
+                    textViewDescription4.visibility = MaterialTextView.GONE
+                    textView4.visibility = MaterialTextView.GONE
+                    textViewDescription3.visibility = MaterialTextView.GONE
+                    textView3.visibility = MaterialTextView.GONE
+                    textViewDescription1.text = context?.getString(data.descriptions[0])
+                    textView1.text = data.values[0]
+                    textViewDescription2.text = context?.getString(data.descriptions[1])
+                    textView2.text = data.values[1]
                 }
                 1 -> {
-                    textViewDescriptionFourth.visibility = MaterialTextView.GONE
-                    textViewFourth.visibility = MaterialTextView.GONE
-                    textViewDescriptionThird.visibility = MaterialTextView.GONE
-                    textViewThird.visibility = MaterialTextView.GONE
-                    textViewDescriptionSecond.visibility = MaterialTextView.GONE
-                    textViewSecond.visibility = MaterialTextView.GONE
-                    textViewDescriptionFirst.text = context?.getString(data.descriptions[0])
-                    textViewFirst.text = data.values[0]
+                    textViewDescription4.visibility = MaterialTextView.GONE
+                    textView4.visibility = MaterialTextView.GONE
+                    textViewDescription3.visibility = MaterialTextView.GONE
+                    textView3.visibility = MaterialTextView.GONE
+                    textViewDescription2.visibility = MaterialTextView.GONE
+                    textView2.visibility = MaterialTextView.GONE
+                    textViewDescription1.text = context?.getString(data.descriptions[0])
+                    textView1.text = data.values[0]
                 }
             }
             if (data.button != null) {

@@ -2,4 +2,5 @@
 <resources>
     <dimen name="recycler_items_margin">16dp</dimen>
     <dimen name="app_bar_height">260dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
 </resources>

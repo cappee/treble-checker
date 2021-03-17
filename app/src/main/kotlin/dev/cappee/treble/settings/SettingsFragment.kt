@@ -17,6 +17,7 @@ import com.afollestad.materialdialogs.input.InputCallback
 import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.SingleChoiceListener
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -25,6 +26,7 @@ import dev.cappee.treble.R
 import dev.cappee.treble.device.DeviceHelper
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -41,7 +43,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var preferenceVersion: Preference
 
     private val viewModel: SettingsViewModel by viewModels {
-        SettingsViewModelFactory(SettingsRepository(context!!))
+        SettingsViewModelFactory(SettingsRepository(context?.dataStore!!))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,32 +67,63 @@ class SettingsFragment : PreferenceFragmentCompat() {
             menuContactUs = MaterialDialog(context!!).apply {
                 title(res = R.string.contact_us)
                 message(res = R.string.contact_us_message)
-                input(hintRes = R.string.contact_us_hint, allowEmpty = false, maxLength = 150, waitForPositiveButton = true, callback = object : InputCallback {
-                    override fun invoke(dialog: MaterialDialog, text: CharSequence) {
-                        database.collection("reports")
-                            .add(hashMapOf(
-                                "message" to text.toString(),
-                                "timestamp" to FieldValue.serverTimestamp(),
-                                "android_version" to Build.VERSION.SDK_INT,
-                                "app_version" to "${BuildConfig.VERSION_CODE}/${BuildConfig.VERSION_NAME}"
-                            ))
-                    }
-                })
+                input(
+                    hintRes = R.string.contact_us_hint,
+                    allowEmpty = false,
+                    maxLength = 150,
+                    waitForPositiveButton = true,
+                    callback = object : InputCallback {
+                        override fun invoke(dialog: MaterialDialog, text: CharSequence) {
+                            lifecycleScope.launch {
+                                database.collection("reports")
+                                    .add(
+                                        hashMapOf(
+                                            "message" to text.toString(),
+                                            "timestamp" to FieldValue.serverTimestamp(),
+                                            "android_version" to Build.VERSION.SDK_INT,
+                                            "app_version" to "${BuildConfig.VERSION_CODE}/${BuildConfig.VERSION_NAME}"
+                                        )
+                                    )
+                                    .addOnSuccessListener {
+                                        if (this@SettingsFragment.view != null) {
+                                            Snackbar
+                                                .make(this@SettingsFragment.view!!, R.string.feedback_sent, Snackbar.LENGTH_SHORT)
+                                                .show()
+                                        }
+                                    }
+                                    .await()
+                            }
+                        }
+                    })
             }
         }
 
         viewModel.liveDataBatteryMode.observeForever { value ->
             preferenceBattery.apply {
-                summary = String.format(getString(R.string.battery_summary),
-                    if (value) { getString(R.string.experimental).toLowerCase() } else { getString(R.string.classic).toLowerCase() })
+                summary = String.format(
+                    getString(R.string.battery_summary),
+                    if (value) {
+                        getString(R.string.experimental).toLowerCase()
+                    } else {
+                        getString(R.string.classic).toLowerCase()
+                    }
+                )
                 onPreferenceClickListener = Preference.OnPreferenceClickListener {
                     MaterialDialog(context!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
                         title(R.string.battery)
                         listItemsSingleChoice(
                             res = R.array.battery_entries,
-                            initialSelection = if (value) { 1 } else { 0 },
+                            initialSelection = if (value) {
+                                1
+                            } else {
+                                0
+                            },
                             selection = object : SingleChoiceListener {
-                                override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
+                                override fun invoke(
+                                    dialog: MaterialDialog,
+                                    index: Int,
+                                    text: CharSequence
+                                ) {
                                     dialog.dismiss()
                                     viewModel.setBatteryModeExperimental(index)
                                 }
@@ -104,7 +137,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         viewModel.liveDataIdentifierOrder.observeForever { value ->
             preferenceIdentifier.apply {
-                summary = String.format(getString(R.string.identifier_summary), DeviceHelper.possibleIdentifierOrder[value])
+                summary = String.format(
+                    getString(R.string.identifier_summary),
+                    DeviceHelper.possibleIdentifierOrder[value]
+                )
                 onPreferenceClickListener = Preference.OnPreferenceClickListener {
                     MaterialDialog(context!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
                         title(R.string.identifier)
@@ -112,7 +148,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                             items = viewModel.identifierEntries,
                             initialSelection = value,
                             selection = object : SingleChoiceListener {
-                                override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
+                                override fun invoke(
+                                    dialog: MaterialDialog,
+                                    index: Int,
+                                    text: CharSequence
+                                ) {
                                     dialog.dismiss()
                                     viewModel.setIdentifierOrder(index)
                                 }
@@ -126,7 +166,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         viewModel.liveDataProcessorShownAs.observeForever { value ->
             preferenceProcessor.apply {
-                summary = String.format(getString(R.string.processor_summary), runBlocking { DeviceHelper.cpu(value = value) })
+                summary = String.format(getString(R.string.processor_summary), runBlocking {
+                    DeviceHelper.cpu(
+                        value = value
+                    )
+                })
                 onPreferenceClickListener = Preference.OnPreferenceClickListener {
                     MaterialDialog(context!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
                         title(R.string.processor)
@@ -137,9 +181,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
                             items = items,
                             initialSelection = DeviceHelper.getCpuIndexByString(value),
                             selection = object : SingleChoiceListener {
-                                override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
+                                override fun invoke(
+                                    dialog: MaterialDialog,
+                                    index: Int,
+                                    text: CharSequence
+                                ) {
                                     dialog.dismiss()
-                                    viewModel.setProcessorShownAs(viewModel.cpuEntries.keys.elementAt(viewModel.cpuEntries.values.indexOf(text)))
+                                    viewModel.setProcessorShownAs(
+                                        viewModel.cpuEntries.keys.elementAt(
+                                            viewModel.cpuEntries.values.indexOf(
+                                                text
+                                            )
+                                        )
+                                    )
                                 }
                             }
                         )
@@ -152,12 +206,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceVersion.summary = viewModel.appVersion
 
         preferenceGithub.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/cappee/treble-checker")))
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://github.com/cappee/treble-checker")
+                )
+            )
             return@OnPreferenceClickListener true
         }
 
         preferenceContactUs.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            menuContactUs.show()
+            if (this::menuContactUs.isInitialized)
+                menuContactUs.show()
             return@OnPreferenceClickListener true
         }
     }

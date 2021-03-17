@@ -2,7 +2,10 @@ package dev.cappee.treble.main
 
 import android.content.Context
 import androidx.lifecycle.*
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
 import dev.cappee.treble.device.Device
 import dev.cappee.treble.device.DeviceHelper
@@ -82,9 +85,9 @@ class MainViewModel(
                 .withAdListener(object : AdListener() {
                     override fun onAdFailedToLoad(loadAdError: LoadAdError?) {
                         super.onAdFailedToLoad(loadAdError)
-                        println(loadAdError?.cause)
-                        println(loadAdError?.message)
-                        println(loadAdError?.domain)
+                        println("ADS ERROR cause: ${loadAdError?.cause}")
+                        println("ADS ERROR message: ${loadAdError?.message}")
+                        println("ADS ERROR domain: ${loadAdError?.domain}")
                     }
                 })
                 .build()

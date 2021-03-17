@@ -1,16 +1,17 @@
 package dev.cappee.treble.settings
 
 import android.content.Context
+import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
-import androidx.datastore.preferences.createDataStore
+import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
-class SettingsRepository(context: Context) {
+val Context.dataStore by preferencesDataStore("settings")
 
-    private val dataStore = context.createDataStore("settings")
+class SettingsRepository(private val dataStore: DataStore<Preferences>) {
 
     private val batteryFetchModeExperimental = booleanPreferencesKey("battery_fetch_mode_experimental")
     private val identifierOrder = intPreferencesKey("identifier_order")

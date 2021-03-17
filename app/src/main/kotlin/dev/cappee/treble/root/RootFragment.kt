@@ -104,6 +104,7 @@ class RootFragment : Fragment() {
                     println(it.mediaContent.mainImage)
                     nativeAdView.setNativeAd(it)
                 }
+                ad = nativeAdView
                 data.add(1, nativeAdView)
                 binding.recyclerView.adapter?.notifyItemInserted(1)
             }

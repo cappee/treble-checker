@@ -18,9 +18,7 @@ import dev.cappee.treble.databinding.LayoutNativeAdBinding
 import dev.cappee.treble.main.MainViewModel
 import dev.cappee.treble.main.recycler.ItemDecoration
 import dev.cappee.treble.model.Data
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class DeviceFragment : Fragment() {
 
@@ -66,7 +64,7 @@ class DeviceFragment : Fragment() {
                         null),
                     Data(
                         R.string.display,
-                        arrayOf(R.string.dimensions, R.string.display_resolution, R.string.dpi, R.string.refresh_rate),
+                        arrayOf(R.string.size, R.string.display_resolution, R.string.dpi, R.string.refresh_rate),
                         arrayOf(it.screenSize, it.screenResolution, it.dpi, it.refreshRate),
                         null)
                 )
@@ -89,7 +87,7 @@ class DeviceFragment : Fragment() {
                         null),
                     Data(
                         R.string.display,
-                        arrayOf(R.string.dimensions, R.string.display_resolution, R.string.dpi, R.string.refresh_rate),
+                        arrayOf(R.string.size, R.string.display_resolution, R.string.dpi, R.string.refresh_rate),
                         arrayOf(it.screenSize, it.screenResolution, it.dpi, it.refreshRate),
                         null)
                 )
@@ -126,6 +124,7 @@ class DeviceFragment : Fragment() {
                     println(it.mediaContent.mainImage)
                     nativeAdView.setNativeAd(it)
                 }
+                ad = nativeAdView
                 data.add(1, nativeAdView)
                 binding.recyclerView.adapter?.notifyItemInserted(1)
             }

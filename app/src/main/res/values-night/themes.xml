@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!--<style name="Theme.TrebleChecker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.TrebleChecker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/purple_300</item>
         <item name="colorPrimaryVariant">?colorPrimary</item>
         <item name="colorAccent">?colorPrimary</item>
-        <item name="colorOnPrimary">@android:color/black</item>
-        Status bar color
+        <item name="colorOnPrimary">@color/dark_grey</item>
+        <!--Status bar color-->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorOnPrimary</item>
-        Dialogs third-party library settings
+        <!--Dialogs third-party library settings-->
         <item name="md_font_title">@font/product_sans_medium</item>
         <item name="md_corner_radius">16dp</item>
-        Theme customization
-        <item name="android:windowBackground">@android:color/black</item>
+        <!--Theme customization-->
+        <item name="android:windowBackground">@color/dark_grey</item>
         <item name="colorControlActivated">?colorPrimary</item>
-        <item name="colorSurface">@color/almost_black</item>
-        <item name="colorBackgroundFloating">@color/almost_black</item>
-    </style>-->
+        <item name="colorSurface">@color/dark_grey</item>
+        <item name="colorBackgroundFloating">@color/dark_grey</item>
+        <item name="preferenceTheme">@style/Theme.TrebleChecker.Settings</item>
+        <item name="snackbarStyle">@style/Widget.Snackbar</item>
+        <item name="snackbarTextViewStyle">@style/Widget.Snackbar.Text</item>
+        <item name="snackbarButtonStyle">@style/Widget.Snackbar.Button</item>
+    </style>
 </resources>

@@ -13,6 +13,7 @@ import android.view.WindowManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dev.cappee.treble.R
 import dev.cappee.treble.settings.SettingsRepository
+import dev.cappee.treble.settings.dataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -29,7 +30,7 @@ import kotlin.math.sqrt
 object DeviceHelper {
 
     suspend fun get() = coroutineScope {
-        settingsRepository = SettingsRepository(applicationContext)
+        settingsRepository = SettingsRepository(applicationContext.dataStore)
         async(Dispatchers.Default) { Device(
             identifier(),
             batteryCapacity(),
@@ -104,7 +105,6 @@ object DeviceHelper {
 
     //Ported method from DroidInfo (https://github.com/cappee/DroidInfo)
     fun cpu(list: Boolean? = null ?: false, value: String? = null) : Any {
-        settingsRepository = SettingsRepository(applicationContext)
         val map: MutableMap<String, String> = HashMap()
         try {
             val scanner = Scanner(File("/proc/cpuinfo"))

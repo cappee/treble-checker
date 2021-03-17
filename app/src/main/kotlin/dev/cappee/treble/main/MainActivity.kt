@@ -15,13 +15,12 @@ import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.list.ItemListener
 import com.afollestad.materialdialogs.list.listItems
 import com.google.android.gms.ads.*
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dev.cappee.treble.R
-import dev.cappee.treble.main.viewpager.ViewPagerAdapter
 import dev.cappee.treble.databinding.ActivityMainBinding
 import dev.cappee.treble.device.DeviceHelper
+import dev.cappee.treble.main.viewpager.ViewPagerAdapter
 import dev.cappee.treble.root.RootHelper
 import dev.cappee.treble.settings.SettingsActivity
 import dev.cappee.treble.treble.TrebleHelper
@@ -94,7 +93,7 @@ class MainActivity : AppCompatActivity() {
             menuDialog.apply {
                 title(R.string.menu)
                 var selection = -1
-                listItems(items = listOf(getText(R.string.tools), getText(R.string.settings)),
+                listItems(items = listOf(/*getText(R.string.tools), */getText(R.string.settings)),
                     selection = object : ItemListener {
                         override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
                             selection = index
@@ -104,10 +103,10 @@ class MainActivity : AppCompatActivity() {
                 )
                 onDismiss {
                     when (selection) {
+                        /*0 -> {
+                            //startActivity(Intent(this@MainActivity, ToolsActivity::class.java))
+                        }*/
                         0 -> {
-                            Snackbar.make(binding.root, R.string.available_in_next_updates, Snackbar.LENGTH_SHORT).show()
-                        }
-                        1 -> {
                             startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
                         }
                     }
@@ -126,7 +125,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu -> {
                 if (::menuDialog.isInitialized)
-                menuDialog.show()
+                    menuDialog.show()
             }
         }
         return super.onOptionsItemSelected(item)

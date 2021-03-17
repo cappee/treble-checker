@@ -1,6 +1,8 @@
 package dev.cappee.treble.settings
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import dev.cappee.treble.BuildConfig
 import dev.cappee.treble.device.DeviceHelper
 import kotlinx.coroutines.launch
