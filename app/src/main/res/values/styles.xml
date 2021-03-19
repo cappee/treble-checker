@@ -30,10 +30,6 @@
         <item name="cardPreventCornerOverlap">true</item>
     </style>
 
-    <style name="Widget.RatingBar" parent="Widget.AppCompat.RatingBar.Small">
-        <item name="colorControlActivated">#FFD700</item>
-    </style>
-
     <style name="Widget.Snackbar" parent="Widget.MaterialComponents.Snackbar">
         <item name="backgroundTint">?colorSurface</item>
         <item name="actionTextColorAlpha">1</item>

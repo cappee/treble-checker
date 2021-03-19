@@ -2,9 +2,7 @@
 <resources>
     <color name="purple_300">#9965f4</color>
     <color name="purple_500">#6200EE</color>
-    <color name="purple_700">#3d00e0</color>
     <color name="dark_grey">#121212</color>
 
     <color name="background">@android:color/white</color>
-    <color name="indicator">@android:color/transparent</color>
 </resources>

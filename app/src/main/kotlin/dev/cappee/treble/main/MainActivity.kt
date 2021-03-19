@@ -1,12 +1,14 @@
 package dev.cappee.treble.main
 
 import android.content.Intent
+import android.content.res.Resources
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var menuDialog: MaterialDialog
 
     private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory(applicationContext, TrebleHelper.init(this), RootHelper.init(this), DeviceHelper.init(this))
+        MainViewModelFactory(TrebleHelper.init(this), RootHelper.init(this), DeviceHelper.init(this))
     }
 
     private val coroutine = CoroutineScope(Dispatchers.Main + Job())
@@ -46,12 +48,6 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         coroutine.launch {
-            //Init AdMob SDK
-            launch(Dispatchers.Default) {
-                MobileAds.initialize(this@MainActivity)
-                viewModel.getNativeAds()
-            }
-
             //Running GPU stuff
             val glSurfaceView = GLSurfaceView(this@MainActivity)
             glSurfaceView.apply {
@@ -68,6 +64,22 @@ class MainActivity : AppCompatActivity() {
                 })
             }
             binding.root.addView(glSurfaceView)
+
+            delay(2000)
+
+            binding.adView.apply {
+                loadAd(AdRequest.Builder().build())
+                adListener = object : AdListener() {
+                    override fun onAdFailedToLoad(loadAdError: LoadAdError?) {
+                        println("ads: cause ${loadAdError?.cause} message ${loadAdError?.message}")
+                    }
+
+                    override fun onAdLoaded() {
+                        super.onAdLoaded()
+                        binding.viewPager.updatePadding(bottom = 50.px)
+                    }
+                }
+            }
         }
 
         //Init ViewPager
@@ -131,4 +143,11 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        coroutine.cancel()
+    }
+
+    val Int.px: Int
+        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 }
