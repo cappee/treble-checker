@@ -101,11 +101,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
         viewModel.liveDataBatteryMode.observeForever { value ->
             preferenceBattery.apply {
                 summary = String.format(
-                    getString(R.string.battery_summary),
+                    activity?.getString(R.string.battery_summary) ?: "",
                     if (value) {
-                        getString(R.string.experimental).toLowerCase()
+                        activity?.getString(R.string.experimental)?.toLowerCase()
                     } else {
-                        getString(R.string.classic).toLowerCase()
+                        activity?.getString(R.string.classic)?.toLowerCase()
                     }
                 )
                 onPreferenceClickListener = Preference.OnPreferenceClickListener {
@@ -138,7 +138,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         viewModel.liveDataIdentifierOrder.observeForever { value ->
             preferenceIdentifier.apply {
                 summary = String.format(
-                    getString(R.string.identifier_summary),
+                    activity?.getString(R.string.identifier_summary) ?: "",
                     DeviceHelper.possibleIdentifierOrder[value]
                 )
                 onPreferenceClickListener = Preference.OnPreferenceClickListener {
@@ -166,7 +166,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         viewModel.liveDataProcessorShownAs.observeForever { value ->
             preferenceProcessor.apply {
-                summary = String.format(getString(R.string.processor_summary), runBlocking {
+                summary = String.format(activity?.getString(R.string.processor_summary) ?: "", runBlocking {
                     DeviceHelper.cpu(
                         value = value
                     )
