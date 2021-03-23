@@ -41,10 +41,9 @@
     <string name="grammatical_particle_of">di</string>
     <string name="compatible_but_hidden">Compatibile, ma nascosto</string>
     <string name="superuser">Superuser</string>
-    <string name="superuser_description">Me jodiste toda la life</string>
-    <string name="busybox_description">Es mejor si no las llamas, las llama no se soportan</string>
-    <string name="a_b_partitioning_description">Que extrañarte nunca va a ser suficiente</string>
-    <string name="system_as_root_description">Solo agarrame y sueltame</string>
+    <string name="superuser_description">\"Superuser\" (o semplicemente \"root\") è l\'utente del sistema che ha i privilegi di amministratore. Con il root si ha il pieno controllo del proprio dispositivo, ad esempio si potranno disinstallare le app preinstallate, si potra modificare a prorpio piacimento l\'interfaccia del dispositivo o altre modifiche più profonde.</string>
+    <string name="busybox_description">BusyBox è una sorta di \"coltellino svizzero\" di Linux, infatti contiene in un piccolo eseguibile moltissime utility (chiamate \"applet\") di Linux.</string>
+    <string name="a_b_partitioning_description">Il partizionamento A/B assicura di avere sempre una partizione di avvio funzionante durante un aggiornamento over-the-air (OTA). In questa maniera si riducono drasticamente le possibilità di avere un device non funzionante per colpa di un aggiornamento non andato a buon fine. I principali vantaggi di questo sistema sono:\n• possibilità per l\'utente di usare il sistema anche durante l\'aggiornamento (sarà necessario solamente un riavvio per cambiare partizione)\n• in caso di errore durante l\'aggiornamento il dispositivo si riavvierà nuovamente e tornerà nella partizione funzionante</string>
     <string name="available">Disponibili</string>
     <string name="not_available">Non disponibili</string>
     <string name="root_permissions">Permessi di root</string>

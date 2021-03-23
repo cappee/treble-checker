@@ -45,47 +45,39 @@ class DeviceFragment : Fragment() {
                     Data(
                         R.string.general,
                         arrayOf(R.string.identifier, R.string.battery),
-                        arrayOf(it.identifier, it.battery),
-                        null),
+                        arrayOf(it.identifier, it.battery)),
                     ad,
                     Data(
                         R.string.chipset,
                         arrayOf(R.string.processor, R.string.graphic_card, R.string.architecture),
-                        arrayOf(it.cpu, it.gpu, it.arch),
-                        null),
+                        arrayOf(it.cpu, it.gpu, it.arch)),
                     Data(
                         R.string.memory,
                         arrayOf(R.string.ram, R.string.intenal_memory, R.string.external_memory),
-                        arrayOf(it.ram, it.internalMemory, it.externalMemory),
-                        null),
+                        arrayOf(it.ram, it.internalMemory, it.externalMemory)),
                     Data(
                         R.string.display,
                         arrayOf(R.string.size, R.string.display_resolution, R.string.dpi, R.string.refresh_rate),
-                        arrayOf(it.screenSize, it.screenResolution, it.dpi, it.refreshRate),
-                        null)
+                        arrayOf(it.screenSize, it.screenResolution, it.dpi, it.refreshRate))
                 )
             } else {
                 data = mutableListOf(
                     Data(
                         R.string.general,
                         arrayOf(R.string.identifier, R.string.battery),
-                        arrayOf(it.identifier, it.battery),
-                        null),
+                        arrayOf(it.identifier, it.battery)),
                     Data(
                         R.string.chipset,
                         arrayOf(R.string.processor, R.string.graphic_card, R.string.architecture),
-                        arrayOf(it.cpu, it.gpu, it.arch),
-                        null),
+                        arrayOf(it.cpu, it.gpu, it.arch)),
                     Data(
                         R.string.memory,
                         arrayOf(R.string.ram, R.string.intenal_memory, R.string.external_memory),
-                        arrayOf(it.ram, it.internalMemory, it.externalMemory),
-                        null),
+                        arrayOf(it.ram, it.internalMemory, it.externalMemory)),
                     Data(
                         R.string.display,
                         arrayOf(R.string.size, R.string.display_resolution, R.string.dpi, R.string.refresh_rate),
-                        arrayOf(it.screenSize, it.screenResolution, it.dpi, it.refreshRate),
-                        null)
+                        arrayOf(it.screenSize, it.screenResolution, it.dpi, it.refreshRate))
                 )
             }
             binding.recyclerView.adapter = RecyclerViewAdapter(context, data)

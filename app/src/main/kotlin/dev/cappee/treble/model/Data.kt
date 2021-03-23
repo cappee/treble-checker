@@ -4,7 +4,7 @@ data class Data(
     val title: Int,
     val descriptions: Array<Int>,
     val values: Array<String>,
-    val button: Pair<Int, Int>?
+    val button: Pair<Int, Int>? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -56,8 +56,7 @@ class TrebleFragment : Fragment() {
                     Data(
                         R.string.system_as_root,
                         arrayOf(R.string.status, R.string.method),
-                        arrayOf(treble.sarStatus, treble.sarMethod),
-                        Pair(R.string.system_as_root, R.string.system_as_root_description))
+                        arrayOf(treble.sarStatus, treble.sarMethod))
                 )
             } else {
                 data = mutableListOf(
@@ -74,8 +73,7 @@ class TrebleFragment : Fragment() {
                     Data(
                         R.string.system_as_root,
                         arrayOf(R.string.status, R.string.method),
-                        arrayOf(treble.sarStatus, treble.sarMethod),
-                        Pair(R.string.system_as_root, R.string.system_as_root_description))
+                        arrayOf(treble.sarStatus, treble.sarMethod))
                 )
             }
             binding.recyclerView.adapter = RecyclerViewAdapter(context, data)

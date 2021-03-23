@@ -17,3 +17,6 @@ google-services.json
 /app/build
 /build
 /captures
+
+#Assets
+/assets

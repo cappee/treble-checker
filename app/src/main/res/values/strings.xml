@@ -8,7 +8,7 @@
     <string name="not_compatible">Not compatible</string>
     <string name="vndk_version">VNDK version</string>
     <string name="more_info">More info</string>
-    <string name="a_b_partitioning">A/B Partitioning</string>
+    <string name="a_b_partitioning">A/B partitioning</string>
     <string name="supported">Supported</string>
     <string name="not_supported">Not supported</string>
     <string name="seamless_updates">Seamless update</string>
@@ -47,11 +47,10 @@
     <string name="grammatical_particle_of">of</string>
     <string name="compatible_but_hidden">Compatible, but hidden</string>
     <string name="superuser">Superuser</string>
-    <string name="superuser_description">Me jodiste toda la life</string>
+    <string name="superuser_description">\"Superuser\" (or simply \"root\") is the system user who has administrator privileges. With root you have full control of your device, for example you can uninstall the pre-installed apps, you can change the device interface or other deeper changes to your liking.</string>
     <string name="busybox" translatable="false">BusyBox</string>
-    <string name="busybox_description">Es mejor si no las llamas, las llama no se soportan</string>
-    <string name="a_b_partitioning_description">Que extrañarte nunca va a ser suficiente</string>
-    <string name="system_as_root_description">Solo agarrame y sueltame</string>
+    <string name="busybox_description">BusyBox is a sort of Linux \"Swiss Army Knife\", in fact it contains in a small executable many Linux utilities (called \"applets\").</string>
+    <string name="a_b_partitioning_description">A/B partitioning ensures that you always have a functioning boot partition during an over-the-air (OTA) upgrade. In this way, the chances of having a device not working due to an unsuccessful update are drastically reduced. The main advantages of this system are:\n• possibility for the user to use the system even during the update (it will only be necessary to reboot to change partitions)\n• in case of an error during the update, the device will reboot again and return to the working partition</string>
     <string name="available">Available</string>
     <string name="not_available">Not available</string>
     <string name="root_permissions">Root permissions</string>
