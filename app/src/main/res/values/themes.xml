@@ -22,4 +22,10 @@
     <style name="Theme.TrebleChecker.Settings" parent="PreferenceThemeOverlay">
         <item name="android:tint">?colorPrimary</item>
     </style>
+
+    <style name="Theme.TrebleChecker.ActionBar" parent="Theme.TrebleChecker">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+    </style>
+
 </resources>

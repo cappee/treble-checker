@@ -28,6 +28,14 @@
         <activity android:name=".settings.SettingsActivity"
             android:label="@string/settings"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/Theme.TrebleChecker.ActionBar" />
+
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/Theme.TrebleChecker.ActionBar" />
     </application>
 
 </manifest>

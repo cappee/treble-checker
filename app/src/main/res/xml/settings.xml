@@ -45,6 +45,11 @@
             app:title="@string/version"
             app:icon="@drawable/ic_android"/>
 
+        <Preference app:key="licenses"
+            app:title="@string/oss_license_title"
+            app:icon="@drawable/ic_text_snippet"
+            app:summary="@string/preferences_license_summary"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -17,6 +17,7 @@ import com.afollestad.materialdialogs.input.InputCallback
 import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.SingleChoiceListener
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
@@ -41,6 +42,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var preferenceGithub: Preference
     private lateinit var preferenceDeveloper: Preference
     private lateinit var preferenceVersion: Preference
+    private lateinit var preferenceLicenses: Preference
 
     private val viewModel: SettingsViewModel by viewModels {
         SettingsViewModelFactory(SettingsRepository(context?.dataStore!!))
@@ -62,6 +64,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceGithub = findPreference("github")!!
         preferenceDeveloper = findPreference("developer")!!
         preferenceVersion = findPreference("version")!!
+        preferenceLicenses = findPreference("licenses")!!
 
         lifecycleScope.launch {
             menuContactUs = MaterialDialog(context!!).apply {
@@ -203,7 +206,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
-        preferenceVersion.summary = viewModel.appVersion
+        preferenceContactUs.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            if (this::menuContactUs.isInitialized)
+                menuContactUs.show()
+            return@OnPreferenceClickListener true
+        }
 
         preferenceGithub.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             startActivity(
@@ -215,9 +222,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
             return@OnPreferenceClickListener true
         }
 
-        preferenceContactUs.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            if (this::menuContactUs.isInitialized)
-                menuContactUs.show()
+        preferenceVersion.summary = viewModel.appVersion
+
+        preferenceLicenses.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            OssLicensesMenuActivity.setActivityTitle(activity?.getString(R.string.oss_license_title) ?: "")
+            startActivity(Intent(context, OssLicensesMenuActivity::class.java))
             return@OnPreferenceClickListener true
         }
     }
